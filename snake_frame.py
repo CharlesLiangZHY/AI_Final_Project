@@ -4,14 +4,15 @@ import pygame
 import tkinter as tk
 from tkinter import messagebox
 
-
+import sys
 
 class World():
+
     def __init__(self, row=20):
         self.row = row
         self.snake = Snake((random.randint(1,self.row), random.randint(1,self.row)), self.row)
         self.food = self.randomPos()
-
+        
 
     def randomPos(self):
         invalidPos = self.snake.body
@@ -24,6 +25,17 @@ class World():
             else:
                 break
         return (x,y)
+
+    def snakeMove(self, dirx, diry):
+        if self.snake.move(dirx, diry):
+            snakeHead = self.snake.head.pos
+            if snakeHead[0] == self.food[0] and snakeHead[1] == self.food[1]: # Food has been eaten.
+                self.snake.addCube()
+                self.food = self.randomPos()
+            return True
+        else:
+            return False
+        
         
 
         
@@ -46,10 +58,9 @@ class World():
 
             foodCube = Cube(self.food, 0, 0, (245, 222, 179))
             foodCube.draw(window, grid)
-            # print("Food: ", foodCube.pos)
-            self.snake.draw(window, grid)
-            # print("Head: ", self.snake.head.pos)
 
+
+            self.snake.draw(window, grid)
 
 
             pygame.display.update()
@@ -75,7 +86,7 @@ class Cube():
         self.dirX = dirx 
         self.dirY = diry 
         self.pos =  (self.pos[0] + self.dirX, self.pos[1] + self.dirY)
-        return self.pos # return new position
+        
 
     def draw(self, window, grid, eyes=False):
         x = self.pos[0]-1
@@ -105,31 +116,40 @@ class Snake():
 
         self.dirX = dirx 
         self.dirY = diry 
-        self.turns[self.head.pos] = (self.dirX, self.dirY)
+        self.turns[self.head.pos[:]] = (self.dirX, self.dirY) # must be pos[:]
 
         
 
         for index, cube in enumerate(self.body):
-            if cube.pos in self.turns:
-                direction = self.turns[cube.pos]
+            p = cube.pos
+            if p in self.turns:
+                direction = self.turns[p]
                 cube.move(direction[0],direction[1])
                 if index == len(self.body)-1: # tail
-                    self.turns.pop(cube.pos)
+                    self.turns.pop(p)
             else:
-                cube.move(cube.dirnX, cube.dirY)
+                cube.move(cube.dirX, cube.dirY)
+        # print("Head: ", self.head.pos)
+
+        for i in range(len(self.body)):
+            if self.body[i].pos in list(map(lambda z:z.pos, self.body[i+1:])):
+                return False
+
+
+
         return True
 
 
     def addCube(self):
         oldTail = self.body[-1]
         if oldTail.dirX == 1 and oldTail.dirY == 0:
-            self.body.append(Cube(oldTail.pos[0]-1, oldTail.pos[1]))
+            self.body.append(Cube((oldTail.pos[0]-1, oldTail.pos[1])))
         elif oldTail.dirX == -1 and oldTail.dirY == 0:
-            self.body.append(Cube(oldTail.pos[0]+1, oldTail.pos[1]))
+            self.body.append(Cube((oldTail.pos[0]+1, oldTail.pos[1])))
         elif oldTail.dirX == 0 and oldTail.dirY == 1:
-            self.body.append(Cube(oldTail.pos[0], oldTail.pos[1]-1))
+            self.body.append(Cube((oldTail.pos[0], oldTail.pos[1]-1)))
         elif oldTail.dirX == 0 and oldTail.dirY == -1:
-            self.body.append(Cube(oldTail.pos[0], oldTail.pos[1]+1))
+            self.body.append(Cube((oldTail.pos[0], oldTail.pos[1]+1)))
 
         self.body[-1].dirX = oldTail.dirX 
         self.body[-1].dirY = oldTail.dirY
@@ -146,25 +166,62 @@ class Snake():
 
 
 
-
-
-
 if __name__ == '__main__':
 
-    width = 500
-    pygame.init()
-    window = pygame.display.set_mode((width,width))
-    clock = pygame.time.Clock()
+    if '-k' in sys.argv or '-key' in sys.argv or '-keyboard' in sys.argv:
+        flag = 'keyboard'
+        width = 400
+        pygame.init()
+        window = pygame.display.set_mode((width,width))
+        clock = pygame.time.Clock()
 
-    flag = True
+        flag = True
 
-    world = World()
-    while flag:
-        # event listening (Essential!)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+        world = World(10)
+        while flag:
+            # event listening (Essential!)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
-        pygame.time.delay(50)
-        clock.tick(10)
-        flag = world.draw(window,width)
+            pygame.time.delay(20)
+            clock.tick(5) # frame
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                    dirx = -1
+                    diry = 0
+                    if world.snakeMove(dirx, diry):
+                        pass
+                    else:
+                        flag = False
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                    dirx = 1
+                    diry = 0
+                    if world.snakeMove(dirx, diry):
+                        pass
+                    else:
+                        flag = False
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                    dirx = 0
+                    diry = -1
+                    if world.snakeMove(dirx, diry):
+                        pass
+                    else:
+                        flag = False
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                    dirx = 0
+                    diry = 1
+                    if world.snakeMove(dirx, diry):
+                        pass
+                    else:
+                        flag = False
+
+            flag = flag and world.draw(window,width)
+
+        print("End.")
+        print("Score is ", len(world.snake.body)-1)
+        
