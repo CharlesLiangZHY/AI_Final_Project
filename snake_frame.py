@@ -9,7 +9,7 @@ from tkinter import messagebox
 class World():
     def __init__(self, row=20):
         self.row = row
-        self.snake = Snake((random.randint(1,self.row), random.randint(1,self.row)))
+        self.snake = Snake((random.randint(1,self.row), random.randint(1,self.row)), self.row)
         self.food = self.randomPos()
 
 
@@ -75,6 +75,7 @@ class Cube():
         self.dirX = dirx 
         self.dirY = diry 
         self.pos =  (self.pos[0] + self.dirX, self.pos[1] + self.dirY)
+        return self.pos # return new position
 
     def draw(self, window, grid, eyes=False):
         x = self.pos[0]-1
@@ -85,18 +86,56 @@ class Cube():
 
 class Snake():
     body = []
-    turns = {}
-    def __init__(self, headLoc):
+    turns = {} # record which direction the cube is goint to turn if it reaches this position
+    def __init__(self, headLoc, mapSize):
         self.head = Cube(headLoc, 1, 0, (0,0,0))
         self.body.append(self.head)
         self.dirX = self.head.dirX
         self.dirY = self.head.dirY
+        self.mapSize = mapSize
 
-    def move(self):
-        pass
+    def move(self, dirx, diry):
+
+        head = self.head.pos
+        if head[0] + dirx == 0 or head[0] + dirx == self.mapSize + 1:
+            return False
+        elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
+            return False
+
+
+        self.dirX = dirx 
+        self.dirY = diry 
+        self.turns[self.head.pos] = (self.dirX, self.dirY)
+
+        
+
+        for index, cube in enumerate(self.body):
+            if cube.pos in self.turns:
+                direction = self.turns[cube.pos]
+                cube.move(direction[0],direction[1])
+                if index == len(self.body)-1: # tail
+                    self.turns.pop(cube.pos)
+            else:
+                cube.move(cube.dirnX, cube.dirY)
+        return True
+
 
     def addCube(self):
-        pass
+        oldTail = self.body[-1]
+        if oldTail.dirX == 1 and oldTail.dirY == 0:
+            self.body.append(Cube(oldTail.pos[0]-1, oldTail.pos[1]))
+        elif oldTail.dirX == -1 and oldTail.dirY == 0:
+            self.body.append(Cube(oldTail.pos[0]+1, oldTail.pos[1]))
+        elif oldTail.dirX == 0 and oldTail.dirY == 1:
+            self.body.append(Cube(oldTail.pos[0], oldTail.pos[1]-1))
+        elif oldTail.dirX == 0 and oldTail.dirY == -1:
+            self.body.append(Cube(oldTail.pos[0], oldTail.pos[1]+1))
+
+        self.body[-1].dirX = oldTail.dirX 
+        self.body[-1].dirY = oldTail.dirY
+
+
+
 
     def draw(self, window, grid): 
         for cube in self.body:
