@@ -15,7 +15,8 @@ class World():
 
     def randomPos(self):
         invalidPos = self.snake.body
-
+        if len(invalidPos) == self.row * self.row:
+            return False
         while True:
             x = random.randint(1,self.row)
             y = random.randint(1,self.row)
@@ -30,7 +31,12 @@ class World():
             snakeHead = self.snake.head.pos
             if snakeHead[0] == self.food[0] and snakeHead[1] == self.food[1]: # Food has been eaten.
                 self.snake.addCube()
-                self.food = self.randomPos()
+                temp = self.randomPos()
+                if temp == False:
+                    self.food = (0,0)
+                    return False
+                else:
+                    self.food = temp
             return True
         else:
             return False
@@ -54,9 +60,9 @@ class World():
                 pygame.draw.line(window, (0,0,0), (x,0), (x,width)) # draw horizontal
                 pygame.draw.line(window, (0,0,0), (0,y), (width,y)) # draw vertical
 
-
-            foodCube = Cube(self.food, 0, 0, (245, 222, 179))
-            foodCube.draw(window, grid)
+            if self.food != (0,0):
+                foodCube = Cube(self.food, 0, 0, (245, 222, 179))
+                foodCube.draw(window, grid)
 
 
             self.snake.draw(window, grid)
@@ -138,6 +144,32 @@ class Snake():
             return False
 
         return True
+
+    def getValidMove(self):
+        if len(self.body) == self.mapSize * self.mapSize:
+            return []
+        validMove = []
+        directions = [(-1,0), (1,0), (0,1), (0,-1)]
+        head = self.head.pos
+        for d in directions:
+            dirx = d[0]
+            diry = d[1]
+            if head[0] + dirx == 0 or head[0] + dirx == self.mapSize + 1:
+                continue    
+            elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
+                continue
+            # Invalid move: Turn around
+            elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0:
+                continue
+
+            newHead = (head[0]+dirx, head[1]+diry)
+            if (newHead[0], newHead[1]) in list(map(lambda z:z.pos, self.body[1:len(self.body)-1])):
+                continue
+
+            validMove.append(d)
+
+        return validMove
+
 
 
     def addCube(self):
