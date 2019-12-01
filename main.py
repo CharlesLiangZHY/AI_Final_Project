@@ -17,15 +17,18 @@ if __name__ == '__main__':
         clock = pygame.time.Clock()
 
         flag = True
-
         world = World(10)
+
+        receiveCmd = False
+        dirx = 0
+        diry = 0
         while flag:
             # event listening (Essential!)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            pygame.time.delay(20)
+            pygame.time.delay(100)
             clock.tick(5) # frame
 
             for event in pygame.event.get():
@@ -35,31 +38,24 @@ if __name__ == '__main__':
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
                     dirx = -1
                     diry = 0
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
+                    
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
                     dirx = 1
                     diry = 0
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
+                    
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                     dirx = 0
                     diry = -1
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
+                    
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                     dirx = 0
                     diry = 1
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
+            
+            if world.snakeMove(dirx, diry):
+                pass
+            else:
+                flag = False
+            # pygame.time.delay(100)
 
             flag = flag and world.draw(window,width)
 
@@ -78,4 +74,4 @@ if __name__ == '__main__':
 
         snake.move(-1,0)
 
-        print(snake.head.pos)
+        print(snake.head)

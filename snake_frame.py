@@ -98,7 +98,7 @@ class Snake():
     body = []
     turns = {} # record which direction the cube is goint to turn if it reaches this position
     def __init__(self, headLoc, mapSize):
-        self.head = Cube(headLoc, 1, 0, (0,0,0))
+        self.head = Cube(headLoc, 0, 0, (0,0,0))
         self.body.append(self.head)
         self.dirX = self.head.dirX
         self.dirY = self.head.dirY
@@ -113,7 +113,7 @@ class Snake():
         elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
             return False 
         # Invalid move: Turn around
-        elif self.dirX + dirx == 0 and self.dirY + diry == 0:
+        elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0:
             return False 
         
 
