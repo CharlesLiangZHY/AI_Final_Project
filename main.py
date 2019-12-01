@@ -6,7 +6,7 @@ def argParse(argv):
     if '-k' in sys.argv or '-key' in sys.argv or '-keyboard' in argv:
         return "Keyboard"
     elif '-t' in sys.argv or '-test' in sys.argv:
-    	return "Test"
+     return "Test"
 
 if __name__ == '__main__':
 
@@ -75,3 +75,42 @@ if __name__ == '__main__':
         snake.move(-1,0)
 
         print(snake.head)
+
+    else:
+     print("\
+             xxxxxxxxxxxxx\n\
+           xx            xxxxxxxxxxx\n\
+          xx                xx------xxxx\n\
+         xx           xxx    xx--------xxxx\n\
+        xx           x  x     xxxx--------xx\n\
+       xx           x  x      x   xx---------xx\n\
+       xx           xxx       x    xx--------xx\n\
+       xx                     x     xx---------xx\n\
+       xx                     x      x----------xx\n\
+       xx                   xx       x----------xx\n\
+       xx                 xx          x---------xx\n\
+        xx             xxx            x--------xx\n\
+         xx          xx               x-------xx\n\
+           xxxxxxxxxx--x              x------xx\n\
+             x  x------x             x------xx\n\
+             x x x-------x           x------x\n\
+            x x   x------x           x-----x         xxxx\n\
+           x x     x-----x          x----x         xx--x\n\
+          x x       x---x          x---xx        xx--xx\n\
+         x   x      x--x          x---x        xx--xx\n\
+        x     x      xx          x---x        x--xx\n\
+       x       x    xx          x---x        x--xx\n\
+                   xx          x---x        x--x x\n\
+                 xx           x---x        x--x  x\n\
+                xx           x--xx        x--x  x\n\
+               xx           x--x         x--x   x\n\
+             xx           x---x       xx--x   x\n\
+             xx           x-----x    xx---x   x\n\
+             xx            xx-----xxxx---x    x\n\
+             xx             xx----------x    x\n\
+             xx              xx------xx     x\n\
+             xx                xxxxxx      x\n\
+              xx                         xx\n\
+               xx                      xxx\n\
+                xx                  xxx\n\
+                  xxxxxxxxxxxxxxxxxx")
