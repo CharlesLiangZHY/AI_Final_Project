@@ -131,7 +131,11 @@ class Snake():
                 cube.move(cube.dirX, cube.dirY)
 
         # Invalid move: Eating itself
-        if (head[0], head[1]) in list(map(lambda z:z.pos, self.body[1:])):
+        print(list(map(lambda z:z.pos, self.body[1:])))
+        print(self.head.pos)
+        print(list(map(lambda z:z.pos, self.body[:])))
+        if (self.head.pos[0], self.head.pos[1]) in list(map(lambda z:z.pos, self.body[1:])):
+            print("OK")
             return False
 
         return True
