@@ -106,12 +106,13 @@ class Snake():
 
     def move(self, dirx, diry):
 
+        # Invalid move: Reaching boundary
         head = self.head.pos
         if head[0] + dirx == 0 or head[0] + dirx == self.mapSize + 1:
-            return False
+            return False    
         elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
-            return False
-
+            return False    
+        
 
         self.dirX = dirx 
         self.dirY = diry 
@@ -130,9 +131,8 @@ class Snake():
                 cube.move(cube.dirX, cube.dirY)
         # print("Head: ", self.head.pos)
 
-        for i in range(len(self.body)):
-            if self.body[i].pos in list(map(lambda z:z.pos, self.body[i+1:])):
-                return False
+        if (head[0], head[1]) in list(map(lambda z:z.pos, self.body[1:])):
+            return False
 
 
 
@@ -163,63 +163,3 @@ class Snake():
 
 
 
-
-
-if __name__ == '__main__':
-
-    if '-k' in sys.argv or '-key' in sys.argv or '-keyboard' in sys.argv:
-        width = 400
-        pygame.init()
-        window = pygame.display.set_mode((width,width))
-        clock = pygame.time.Clock()
-
-        flag = True
-
-        world = World(10)
-        while flag:
-            # event listening (Essential!)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            pygame.time.delay(20)
-            clock.tick(5) # frame
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
-                    dirx = -1
-                    diry = 0
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
-                    dirx = 1
-                    diry = 0
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
-                    dirx = 0
-                    diry = -1
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                    dirx = 0
-                    diry = 1
-                    if world.snakeMove(dirx, diry):
-                        pass
-                    else:
-                        flag = False
-
-            flag = flag and world.draw(window,width)
-
-        print("End.")
-        print("Score is ", len(world.snake.body)-1)
-        
