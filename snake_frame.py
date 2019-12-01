@@ -111,7 +111,10 @@ class Snake():
         if head[0] + dirx == 0 or head[0] + dirx == self.mapSize + 1:
             return False    
         elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
-            return False    
+            return False 
+        # Invalid move: Turn around
+        elif self.dirX + dirx == 0 and self.dirY + diry == 0:
+            return False 
         
 
         self.dirX = dirx 
@@ -131,11 +134,7 @@ class Snake():
                 cube.move(cube.dirX, cube.dirY)
 
         # Invalid move: Eating itself
-        print(list(map(lambda z:z.pos, self.body[1:])))
-        print(self.head.pos)
-        print(list(map(lambda z:z.pos, self.body[:])))
         if (self.head.pos[0], self.head.pos[1]) in list(map(lambda z:z.pos, self.body[1:])):
-            print("OK")
             return False
 
         return True
