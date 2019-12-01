@@ -168,7 +168,6 @@ class Snake():
 if __name__ == '__main__':
 
     if '-k' in sys.argv or '-key' in sys.argv or '-keyboard' in sys.argv:
-        flag = 'keyboard'
         width = 400
         pygame.init()
         window = pygame.display.set_mode((width,width))
