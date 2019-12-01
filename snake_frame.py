@@ -129,12 +129,10 @@ class Snake():
                     self.turns.pop(p)
             else:
                 cube.move(cube.dirX, cube.dirY)
-        # print("Head: ", self.head.pos)
 
+        # Invalid move: Eating itself
         if (head[0], head[1]) in list(map(lambda z:z.pos, self.body[1:])):
             return False
-
-
 
         return True
 
@@ -152,9 +150,6 @@ class Snake():
 
         self.body[-1].dirX = oldTail.dirX 
         self.body[-1].dirY = oldTail.dirY
-
-
-
 
     def draw(self, window, grid): 
         for cube in self.body:

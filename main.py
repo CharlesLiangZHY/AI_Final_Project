@@ -67,5 +67,15 @@ if __name__ == '__main__':
         print("Score is ", len(world.snake.body)-1)
 
     elif argParse(sys.argv) == "Test":
-        pass
+        world = World(10)
+        snake = world.snake
         
+        print(snake.head.pos)
+
+        world.snakeMove(-1,0)
+
+        print(snake.head.pos)
+
+        snake.move(-1,0)
+
+        print(snake.head.pos)
