@@ -27,11 +27,11 @@ def Long_Live_Snake():
                     x         xx---xx       x--x  x\n\
                   xx         xx---xx       x--x   x\n\
                  x          xx--xx        x--x   xx\n\
-               xx          xx--x        xx--x    x\n\
+               xx          xx--x        xx--x   x\n\
               xx          xx--xx      xx---x    xx\n\
              xx           x-----xx   xx---x    xx\n\
              xx            xx-----xxxx---x    xx\n\
-             xx             xx----------x    xx\n\
+             xx             xx---------xx    xx\n\
              xx              xx------xx     xx\n\
              xx                xxxxxx      xx\n\
               xx                         xxx\n\
@@ -99,32 +99,37 @@ if __name__ == '__main__':
         print("Score is ", len(world.snake.body)-1)
 
     elif argParse(sys.argv) == "Test":
-        width = 100
+        width = 200
         pygame.init()
         window = pygame.display.set_mode((width, width))
         clock = pygame.time.Clock()
 
 
-        world = World(2)
+        world = World(4)
         snake = world.snake
         world.draw(window, width)
         pygame.time.delay(1000)
-
-        while(True):
-            V = snake.getValidMove()
-            if len(V) == 0:
-                break
-            world.snakeMove(V[0][0], V[0][1])
-            world.draw(window, width)
-            pygame.time.delay(1000)
-
-
 
         while True:       
             # event listening (Essential!)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
+            pygame.time.delay(1000)
+            clock.tick(5)
+
+            V = snake.getValidMove()
+            if len(V) == 0:
+                pass
+            else: 
+              if world.snakeMove(V[0][0], V[0][1]):
+                print(V)
+              else:
+                break
+            world.draw(window, width)
+            
+
 
 
     else:
