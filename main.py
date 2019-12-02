@@ -123,7 +123,8 @@ if __name__ == '__main__':
             if len(V) == 0:
                 pass
             else: 
-              if world.snakeMove(V[0][0], V[0][1]):
+              v = V[random.randint(0,len(V)-1)]
+              if world.snakeMove(v[0], v[1]):
                 print(V)
               else:
                 break
