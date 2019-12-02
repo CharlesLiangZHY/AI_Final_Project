@@ -51,18 +51,21 @@ def argParse(argv):
 if __name__ == '__main__':
 
     if argParse(sys.argv) == "Keyboard" or argParse(sys.argv) == "Step":
-        width = 100
+        mode = 0
+        if argParse(sys.argv) == "Step":
+          mode = 1
+        width = 500
         pygame.init()
         window = pygame.display.set_mode((width,width))
         clock = pygame.time.Clock()
 
         flag = True
-        world = World(2)
+        world = World(10)
         receiveCmd = False
         dirx = 0
         diry = 0
         while flag:       
-            pygame.time.delay(100)
+            pygame.time.delay(200)
             clock.tick(5) # frame
             # event listening (Essential!)
             for event in pygame.event.get():
@@ -85,12 +88,17 @@ if __name__ == '__main__':
                     dirx = 0
                     diry = 1
                     receiveCmd = True
-            if receiveCmd:
-                if world.snakeMove(dirx, diry):
-                    pass
-                else:
-                    flag = False
-            # pygame.time.delay(100)
+            if mode == 1: # Step mode
+              if receiveCmd:
+                  if world.snakeMove(dirx, diry):
+                      pass
+                  else:
+                      flag = False
+            else:
+              if world.snakeMove(dirx, diry):
+                  pass
+              else:
+                  flag = False
 
             flag = flag and world.draw(window, width)
             receiveCmd = False
