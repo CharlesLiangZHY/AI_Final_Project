@@ -29,11 +29,11 @@ def Long_Live_Snake():
                  x          xx--xx        x--x   xx\n\
                xx          xx--x        xx--x   x\n\
               xx          xx--xx      xx---x    xx\n\
-             xx           x-----xx   xx---x    xx\n\
-             xx            xx-----xxxx---x    xx\n\
-             xx             xx---------xx    xx\n\
-             xx              xx------xx     xx\n\
-             xx                xxxxxx      xx\n\
+             xx          xx-----xx   xx---x    xx\n\
+             xx          xx------xxxx---x    xx\n\
+             xx           xx----------xx    xx\n\
+             xx             xx-------xx     xx\n\
+             xx               xxxxxxx      xx\n\
               xx                         xxx\n\
                xxx                     xxx\n\
                  xxxx               xxx\n\
