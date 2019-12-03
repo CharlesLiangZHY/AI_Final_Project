@@ -9,35 +9,36 @@ def Long_Live_Snake():
          xx         x| x   x   xx--------xx\n\
         xx         x|| x   x    xx---------xx\n\
         xx        x ||x    x      xx--------xx\n\
-        xx         xxx    xx       xx---------xx\n\
-        xx               xx         xx---------xx\n\
-        xx              xx           xx---------xx\n\
-        xx             xx            xx---------xx\n\
-         xx           xx             xx--------xx\n\
-          xx       xxx               xx-------xx\n\
-            xxxxxxx---xx             xx-------x\n\
-             xx  x------x            xx------x      x\n\
+        xx         xxx    xx        x---------xx\n\
+        xx               xx          x---------xx\n\
+        xx              xx            x---------xx\n\
+        xx             xx              x---------xx\n\
+         xx           xx               x--------xx\n\
+          xx       xxx                 x-------xx\n\
+            xxxxxxx---xx               x-------x\n\
+             xx  x------x             x------x      x\n\
              xx  x-------x           xx-----x      x-\n\
-            xx    x------x          xx-----x      x-\n\
-           xx      x-----x         xx----xx      x-\n\
+            xx    x------x          xx-----x      x-x\n\
+           xx      x-----x         xx----xx      x-x\n\
           x x       x---x         xx---xx       x-x\n\
-         x   x      x--x         xx---xx       x--x\n\
-        x     x      xx         xx---xx       x--xx\n\
-       x      x      x         xx---xx       x--x x\n\
-                    x         xx---xx       x--x  x\n\
-                  xx         xx---xx       x--x   x\n\
-                 x          xx--xx        x--x   xx\n\
+         x   x      x--x         xx---xx       x-x\n\
+        x     x      xx         xx---xx       x-x\n\
+       x      x      x         xx---xx       x--x\n\
+                    x         xx---xx       x--xx\n\
+                  xx         xx---xx       x--x x\n\
+                 x          xx--xx        x--x  x\n\
                xx          xx--x        xx--x   x\n\
-              xx          xx--xx      xx---x    xx\n\
-             xx          xx-----xx   xx---x    xx\n\
-             xx          xx------xxxx---x    xx\n\
-             xx           xx----------xx    xx\n\
-             xx             xx-------xx     xx\n\
-             xx               xxxxxxx      xx\n\
-              xx                         xxx\n\
-               xxx                     xxx\n\
-                 xxxx               xxx\n\
-                    xxxxxxxxxxxxxxxx")
+              xx          xx--xx      xx---x    x\n\
+             x           xx-----xx   xx---x     x\n\
+            x            xx------xxxx---xx     x\n\
+            x             xx-----------x      x\n\
+            x               xx-------xx      x\n\
+             x                xxxxxxx       x\n\
+              x                           xx\n\
+               xx                       xx\n\
+                 xx                   xx\n\
+                   xxx             xxx\n\
+                      xxxxxxxxxxxxx")
 
 def argParse(argv):
     if '-k' in sys.argv or '-key' in sys.argv or '-keyboard' in argv:
