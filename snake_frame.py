@@ -61,7 +61,7 @@ class World():
                 pygame.draw.line(window, (0,0,0), (0,y), (width,y)) # draw vertical
 
             if self.food != (0,0):
-                foodCube = Cube(self.food, 0, 0, (245, 222, 179))
+                foodCube = Cube(self.food, 0, 0, (255, 255, 0))
                 foodCube.draw(window, grid)
 
 

@@ -40,6 +40,18 @@ def Long_Live_Snake():
                    xxx             xxx\n\
                       xxxxxxxxxxxxx")
 
+
+def whosBOSS():
+  print("\
+                                        ,==.\n\
+                                        \\ o ',\n\
+                        .--.             \\    \\.''..''..''.\n\
+ _       _       _     '-._ \\            /    ;'..''..''..'\n\
+|_|     |_|     |_|    .-'  /           /   .'         .''.    .''..''..''..''.\n\
+                        '--'            \"==\"           '..'    '..''..''..''..'\n\
+                                                       .''..''..''.\n\
+                                                       '..''..''..'")
+
 def argParse(argv):
     if '-k' in sys.argv or '-key' in sys.argv or '-keyboard' in argv:
         if '-s' in sys.argv or '-step' in sys.argv:
@@ -144,4 +156,5 @@ if __name__ == '__main__':
 
     else:
         Long_Live_Snake()
+        whosBOSS()
 
