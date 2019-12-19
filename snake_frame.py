@@ -9,8 +9,9 @@ class World():
 
     def __init__(self, row=20):
         self.row = row
-        self.snake = Snake((random.randint(1,self.row), random.randint(1,self.row)), self.row)
+        self.snake = Snake((self.row // 2 + 1, self.row // 2 + 1), self.row)
         self.food = self.randomPos()
+        # self.food = (-1,-1)
         
 
     def randomPos(self):
@@ -76,10 +77,10 @@ class Cube():
     def __init__(self, start, dirx=1, diry=0, color=(105,105,105)):
         self.pos = start # (x , y)
         '''
-        left:  dirX =  1 dirY =  0
-        right: dirX = -1 dirY =  0
-        up:    dirX =  0 dirY =  1
-        down:  dirX =  0 dirY = -1
+        left:  dirX = -1 dirY =  0
+        right: dirX =  1 dirY =  0
+        up:    dirX =  0 dirY = -1
+        down:  dirX =  0 dirY =  1
         food:  dirX =  0 dirY =  0
         '''
         self.dirX = dirx 
@@ -104,11 +105,13 @@ class Snake():
     body = []
     turns = {} # record which direction the cube is goint to turn if it reaches this position
     def __init__(self, headLoc, mapSize):
-        self.head = Cube(headLoc, 0, 0, (0,0,0))
+        self.head = Cube(headLoc, 0, 0, (0,0,0)) 
         self.body.append(self.head)
         self.dirX = self.head.dirX
         self.dirY = self.head.dirY
         self.mapSize = mapSize
+
+        self.boringAgentInit = 0
 
     def move(self, dirx, diry):
 
@@ -119,7 +122,7 @@ class Snake():
         elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
             return False 
         # Invalid move: Turn around
-        elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0:
+        elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0 and len(self.body) != 1:
             return False 
         
 
