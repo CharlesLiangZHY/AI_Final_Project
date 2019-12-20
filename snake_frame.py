@@ -10,6 +10,7 @@ class World():
     def __init__(self, row=20):
         self.row = row
         self.snake = Snake((self.row // 2 + 1, self.row // 2 + 1), self.row)
+        # self.snake = Snake((1, 2), self.row)
         self.food = self.randomPos()
         # self.food = (-1,-1)
         

@@ -79,7 +79,7 @@ if __name__ == '__main__':
         mode = 0
         if argParse(sys.argv) == "Step":
           mode = 1
-        width = 500
+        width = row*40
         pygame.init()
         window = pygame.display.set_mode((width,width))
         clock = pygame.time.Clock()
@@ -116,7 +116,7 @@ if __name__ == '__main__':
             if mode == 1: # Step mode
               if receiveCmd:
                   if world.snakeMove(dirx, diry):
-                      print(world.snake.head.pos)
+                      # print(world.snake.head.pos)
                       pass
                   else:
                       flag = False
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         print("Score is ", len(world.snake.body)-1)
 
     elif argParse(sys.argv) == "Test":
-        width = 500
+        width = row*40
         pygame.init()
         window = pygame.display.set_mode((width, width))
         clock = pygame.time.Clock()
@@ -168,7 +168,7 @@ if __name__ == '__main__':
         print("Score is ", len(world.snake.body)-1)
 
     elif argParse(sys.argv) == "Boring":
-        width = 500
+        width = row*40
         pygame.init()
         window = pygame.display.set_mode((width, width))
         clock = pygame.time.Clock()
@@ -185,14 +185,15 @@ if __name__ == '__main__':
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            pygame.time.delay(100)
-            clock.tick(5)
+            pygame.time.delay(50)
+            clock.tick(10)
 
             d = boringAgent(world)
             if d != None:
                 world.snakeMove(d[0],d[1])
             else:
-                break
+                # break
+                pass
             world.draw(window, width)
 
         print("End.")
