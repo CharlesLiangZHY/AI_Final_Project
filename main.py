@@ -62,8 +62,8 @@ def argParse(argv):
             return "Step" 
         else:
             return "Keyboard"
-    elif '-t' in sys.argv or '-test' in sys.argv:
-     return "Test"
+    elif '-random' in sys.argv:
+     return "Random"
     elif '-pacman' in sys.argv:
         return "Pacman"
     elif '-ll' in sys.argv:
@@ -147,7 +147,7 @@ if __name__ == '__main__':
             print("End.")
             print("Score is ", len(world.snake.body)-1)
 
-        elif argParse(sys.argv) == "Test":
+        elif argParse(sys.argv) == "Random":
             width = row*40
             height = col*40
             pygame.init()
