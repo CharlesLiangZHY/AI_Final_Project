@@ -13,7 +13,13 @@ class World():
         self.col = col
         self.snake = Snake((self.row // 2 + 1, self.col // 2 + 1), [self.row, self.col])
         self.food = self.randomPos()
-        self.distance = np.zeros((self.col+2, self.row+2))
+        self.distance = []
+        for y in range(self.col+2):
+            self.distance.append([])
+            for x in range(self.row+2):
+                self.distance[y].append(0)
+
+
         for x in range(1,1+self.row):
             for y in range(1,1+self.col):
                 self.distance[y][x] = float('inf')
@@ -31,6 +37,7 @@ class World():
             for d in [up,down,left,right]:
                 if d not in visited and self.distance[d[1]][d[0]] != 0:
                     fringe.append(d)
+                    visited.append(d)
                     self.distance[d[1]][d[0]] = self.distance[loc[1]][loc[0]] + 1
             fringe.pop(0)
 
@@ -58,8 +65,8 @@ class World():
                     return False
                 else:
                     self.food = temp
+
                     
-                    self.distance = np.zeros((self.col+2, self.row+2))
                     for x in range(1,1+self.row):
                         for y in range(1,1+self.col):
                             self.distance[y][x] = float('inf')
@@ -77,6 +84,7 @@ class World():
                         for d in [up,down,left,right]:
                             if d not in visited and self.distance[d[1]][d[0]] != 0:
                                 fringe.append(d)
+                                visited.append(d)
                                 self.distance[d[1]][d[0]] = self.distance[loc[1]][loc[0]] + 1
                         fringe.pop(0)
             return True
