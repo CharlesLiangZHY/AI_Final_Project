@@ -7,12 +7,8 @@ from snake_frame import *
 
 def boringAgent(world):
     r = world.row
-    
-        
-
     s = world.snake
     loc = s.head.pos
-    d = (s.dirX, s.dirY)
     f = world.food
     V = s.getValidMove()
     if len(V) == 0:
