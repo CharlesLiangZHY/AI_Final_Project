@@ -1,8 +1,7 @@
+import pygame
+
 import math
 import random
-import pygame
-import numpy as np
-
 import sys
 
 class World():
@@ -72,6 +71,7 @@ class World():
 
             pygame.display.update()
             return True
+        
 
 class Cube():
 

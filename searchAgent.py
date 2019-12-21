@@ -1,5 +1,7 @@
 from snake_frame import *
 
+import numpy as np
+
 def BFS_Agent(world):
     r = world.row
     s = world.snake
