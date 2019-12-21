@@ -70,6 +70,8 @@ def argParse(argv):
         return "Boring"
     elif '-bfs' in sys.argv:
         return "BFS"
+    elif '-bfsp' in sys.argv or '-bfs+' in sys.argv:
+        return "BFS+"
 
 if __name__ == '__main__':
     row = 10
@@ -119,7 +121,7 @@ if __name__ == '__main__':
             if mode == 1: # Step mode
               if receiveCmd:
                   if world.snakeMove(dirx, diry):
-                      # print(world.snake.head.pos)
+                    #   print(world.snake.getValidMove())
                       pass
                   else:
                       flag = False
@@ -225,7 +227,7 @@ if __name__ == '__main__':
             pygame.time.delay(50)
             clock.tick(10)
 
-            d = BFS(world)
+            d = BFS_Agent(world)
             if d != None:
                 world.snakeMove(d[0],d[1])
             else:
@@ -235,6 +237,46 @@ if __name__ == '__main__':
 
         print("End.")
         print("Score is ", len(world.snake.body)-1)
+
+    elif argParse(sys.argv) == "BFS+":
+        width = row*40
+        pygame.init()
+        window = pygame.display.set_mode((width, width))
+        clock = pygame.time.Clock()
+
+
+        world = World(row)
+        snake = world.snake
+        world.draw(window, width)
+        pygame.time.delay(200)
+
+        
+
+        while True:       
+            # event listening (Essential!)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+            pygame.time.delay(50)
+            clock.tick(10)
+
+            d = BFS_Wander_Agent(world)
+            if d != None:
+                world.snakeMove(d[0],d[1])
+            else:
+                break
+                # pass
+            world.draw(window, width)
+
+        print("End.")
+        print("Score is ", len(world.snake.body)-1)
+
+
+
+
+
+
 
     elif argParse(sys.argv) == "Pacman":
         whosBOSS()
