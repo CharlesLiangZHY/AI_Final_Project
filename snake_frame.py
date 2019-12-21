@@ -4,23 +4,43 @@ import math
 import random
 import sys
 
+import numpy as np
+
 class World():
 
-    def __init__(self, row=20):
+    def __init__(self, row=20, col = 20):
         self.row = row
-        self.snake = Snake((self.row // 2 + 1, self.row // 2 + 1), self.row)
-        # self.snake = Snake((1, 2), self.row)
+        self.col = col
+        self.snake = Snake((self.row // 2 + 1, self.col // 2 + 1), [self.row, self.col])
         self.food = self.randomPos()
-        # self.food = (-1,-1)
-        
+        self.distance = np.zeros((self.col+2, self.row+2))
+        for x in range(1,1+self.row):
+            for y in range(1,1+self.col):
+                self.distance[y][x] = float('inf')
+        self.distance[self.food[1]][self.food[0]] = 1
+        visited = []
+        fringe = [self.food]
+        while len(fringe) != 0:
+            loc = fringe[0]
+            visited.append(loc)
+            up = (loc[0],loc[1]-1)
+            down = (loc[0],loc[1]+1)
+            left = (loc[0]-1,loc[1])
+            right = (loc[0]+1,loc[1])
+
+            for d in [up,down,left,right]:
+                if d not in visited and self.distance[d[1]][d[0]] != 0:
+                    fringe.append(d)
+                    self.distance[d[1]][d[0]] = self.distance[loc[1]][loc[0]] + 1
+            fringe.pop(0)
 
     def randomPos(self):
         invalidPos = self.snake.body
-        if len(invalidPos) == self.row * self.row:
+        if len(invalidPos) == self.row * self.col:
             return False
         while True:
             x = random.randint(1,self.row)
-            y = random.randint(1,self.row)
+            y = random.randint(1,self.col)
             if len(list(filter(lambda z:z.pos == (x,y), invalidPos))) > 0:
                 continue
             else:
@@ -38,6 +58,27 @@ class World():
                     return False
                 else:
                     self.food = temp
+                    
+                    self.distance = np.zeros((self.col+2, self.row+2))
+                    for x in range(1,1+self.row):
+                        for y in range(1,1+self.col):
+                            self.distance[y][x] = float('inf')
+                    self.distance[self.food[1]][self.food[0]] = 1
+                    visited = []
+                    fringe = [self.food]
+                    while len(fringe) != 0:
+                        loc = fringe[0]
+                        visited.append(loc)
+                        up = (loc[0],loc[1]-1)
+                        down = (loc[0],loc[1]+1)
+                        left = (loc[0]-1,loc[1])
+                        right = (loc[0]+1,loc[1])
+
+                        for d in [up,down,left,right]:
+                            if d not in visited and self.distance[d[1]][d[0]] != 0:
+                                fringe.append(d)
+                                self.distance[d[1]][d[0]] = self.distance[loc[1]][loc[0]] + 1
+                        fringe.pop(0)
             return True
         else:
             return False
@@ -45,9 +86,12 @@ class World():
         
 
         
-    def draw(self, window, width, background = (255,255,255)):
-        if(width < 10*self.row):
-            print("The window width is too small.(At least 10*row pixels)")
+    def draw(self, window, width, height, background = (255,255,255)):
+        if width < 10*self.row and height < 10*self.col:
+            print("The window is too small.")
+            return False
+        if width // self.row != height // self.col:
+            print("Please check gird side length.")
             return False
         else:
             window.fill(background)
@@ -56,11 +100,12 @@ class World():
             x = 0
             y = 0
             for i in range(self.row):
-                x = x + grid 
-                y = y + grid
-                pygame.draw.line(window, (0,0,0), (x,0), (x,width)) # draw horizontal
-                pygame.draw.line(window, (0,0,0), (0,y), (width,y)) # draw vertical
-
+                y = y + grid 
+                pygame.draw.line(window, (0,0,0), (y,0), (y,height)) # draw horizontal
+                
+            for i in range(self.col):
+                x = x + grid
+                pygame.draw.line(window, (0,0,0), (0,x), (width,x)) # draw vertical
             if self.food != (0,0):
                 foodCube = Cube(self.food, 0, 0, (255, 255, 0))
                 foodCube.draw(window, grid)
@@ -118,9 +163,9 @@ class Snake():
 
         # Invalid move: Reaching boundary
         head = self.head.pos
-        if head[0] + dirx == 0 or head[0] + dirx == self.mapSize + 1:
+        if head[0] + dirx == 0 or head[0] + dirx == self.mapSize[0] + 1:
             return False    
-        elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
+        elif head[1] + diry == 0 or head[1] + diry == self.mapSize[1] + 1:
             return False 
         # Invalid move: Turn around
         elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0 and len(self.body) != 1:
@@ -150,7 +195,7 @@ class Snake():
         return True
 
     def getValidMove(self):
-        if len(self.body) == self.mapSize * self.mapSize:
+        if len(self.body) == self.mapSize[0] * self.mapSize[1]:
             return []
         validMove = []
         directions = [(-1,0), (1,0), (0,1), (0,-1)]
@@ -158,12 +203,12 @@ class Snake():
         for d in directions:
             dirx = d[0]
             diry = d[1]
-            if head[0] + dirx == 0 or head[0] + dirx == self.mapSize + 1:
+            if head[0] + dirx == 0 or head[0] + dirx == self.mapSize[0] + 1:
                 continue    
-            elif head[1] + diry == 0 or head[1] + diry == self.mapSize + 1:
+            elif head[1] + diry == 0 or head[1] + diry == self.mapSize[1] + 1:
                 continue
             # Invalid move: Turn around
-            elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0:
+            elif self.dirX + dirx == 0 and self.dirY + diry == 0 and self.dirY + self.dirX != 0 and len(self.body) > 1:
                 continue
 
             newHead = (head[0]+dirx, head[1]+diry)

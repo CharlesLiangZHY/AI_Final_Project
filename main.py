@@ -64,222 +64,199 @@ def argParse(argv):
             return "Keyboard"
     elif '-t' in sys.argv or '-test' in sys.argv:
      return "Test"
-    elif '-pacman' in sys.argv or '-p' in sys.argv:
+    elif '-pacman' in sys.argv:
         return "Pacman"
+    elif '-ll' in sys.argv:
+        return "LongLiveSnake"
     elif '-boring' in sys.argv:
         return "Boring"
-    elif '-bfs' in sys.argv:
-        return "BFS"
-    elif '-bfsp' in sys.argv or '-bfs+' in sys.argv:
-        return "BFS+"
+    elif '-g' in sys.argv:
+        return "Greedy"
+    elif '-w' in sys.argv:
+        return "Wander"
 
 if __name__ == '__main__':
     row = 10
+    col = 10
     for i in range(len(sys.argv)):
         if sys.argv[i] == '-w':
             row = int(sys.argv[i+1])
-            break
-
-    if argParse(sys.argv) == "Keyboard" or argParse(sys.argv) == "Step":
-        mode = 0
-        if argParse(sys.argv) == "Step":
-          mode = 1
-        width = row*40
-        pygame.init()
-        window = pygame.display.set_mode((width,width))
-        clock = pygame.time.Clock()
-
-        flag = True
-        world = World(row)
-        receiveCmd = False
-        dirx = 0
-        diry = 0
-        while flag:       
-            pygame.time.delay(200)
-            clock.tick(5) # frame
-            # event listening (Essential!)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
-                    dirx = -1
-                    diry = 0
-                    receiveCmd = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
-                    dirx = 1
-                    diry = 0
-                    receiveCmd = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
-                    dirx = 0
-                    diry = -1
-                    receiveCmd = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                    dirx = 0
-                    diry = 1
-                    receiveCmd = True
-            if mode == 1: # Step mode
-              if receiveCmd:
-                  if world.snakeMove(dirx, diry):
-                    #   print(world.snake.getValidMove())
-                      pass
-                  else:
-                      flag = False
-            else:
-              if world.snakeMove(dirx, diry):
-
-                  pass
-              else:
-                  flag = False
-
-            flag = flag and world.draw(window, width)
-            receiveCmd = False
-
-        print("End.")
-        print("Score is ", len(world.snake.body)-1)
-
-    elif argParse(sys.argv) == "Test":
-        width = row*40
-        pygame.init()
-        window = pygame.display.set_mode((width, width))
-        clock = pygame.time.Clock()
-
-
-        world = World(row)
-        snake = world.snake
-        world.draw(window, width)
-        pygame.time.delay(1000)
-
-        while True:       
-            # event listening (Essential!)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            pygame.time.delay(1000)
-            clock.tick(5)
-
-            V = snake.getValidMove()
-            if len(V) == 0:
-                pass
-            else: 
-              v = V[random.randint(0,len(V)-1)]
-              if world.snakeMove(v[0], v[1]):
-                pass
-              else:
-                break
-            world.draw(window, width)
-        print("End.")
-        print("Score is ", len(world.snake.body)-1)
-
-    elif argParse(sys.argv) == "Boring":
-        width = row*40
-        pygame.init()
-        window = pygame.display.set_mode((width, width))
-        clock = pygame.time.Clock()
-
-
-        world = World(row)
-        snake = world.snake
-        world.draw(window, width)
-        pygame.time.delay(200)
-
-        while True:       
-            # event listening (Essential!)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            pygame.time.delay(50)
-            clock.tick(10)
-
-            d = boringAgent(world)
-            if d != None:
-                world.snakeMove(d[0],d[1])
-            else:
-                # break
-                pass
-            world.draw(window, width)
-
-        print("End.")
-        print("Score is ", len(world.snake.body)-1)
-        
-    elif argParse(sys.argv) == "BFS":
-        width = row*40
-        pygame.init()
-        window = pygame.display.set_mode((width, width))
-        clock = pygame.time.Clock()
-
-
-        world = World(row)
-        snake = world.snake
-        world.draw(window, width)
-        pygame.time.delay(200)
-
-        
-
-        while True:       
-            # event listening (Essential!)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            pygame.time.delay(50)
-            clock.tick(10)
-
-            d = BFS_Agent(world)
-            if d != None:
-                world.snakeMove(d[0],d[1])
-            else:
-                break
-                # pass
-            world.draw(window, width)
-
-        print("End.")
-        print("Score is ", len(world.snake.body)-1)
-
-    elif argParse(sys.argv) == "BFS+":
-        width = row*40
-        pygame.init()
-        window = pygame.display.set_mode((width, width))
-        clock = pygame.time.Clock()
-
-
-        world = World(row)
-        snake = world.snake
-        world.draw(window, width)
-        pygame.time.delay(200)
-
-        
-
-        while True:       
-            # event listening (Essential!)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            pygame.time.delay(50)
-            clock.tick(10)
-
-            d = BFS_Wander_Agent(world)
-            if d != None:
-                world.snakeMove(d[0],d[1])
-            else:
-                break
-                # pass
-            world.draw(window, width)
-
-        print("End.")
-        print("Score is ", len(world.snake.body)-1)
-
-
-
-
-
-
-
-    elif argParse(sys.argv) == "Pacman":
-        whosBOSS()
+            continue
+        elif sys.argv[i] == '-h':
+            col = int(sys.argv[i+1])
+            continue
+    if row < 2 or col < 2:
+        print("The map is too small!")
     else:
+        if argParse(sys.argv) == "Keyboard" or argParse(sys.argv) == "Step":
+            mode = 0
+            if argParse(sys.argv) == "Step":
+                mode = 1
+            width = row*40
+            height = col*40
+            pygame.init()
+            window = pygame.display.set_mode((width,height))
+            clock = pygame.time.Clock()
+
+            flag = True
+            world = World(row,col)
+            receiveCmd = False
+            dirx = 0
+            diry = 0
+            while flag:       
+                pygame.time.delay(100)
+                clock.tick(5) # frame
+                # event listening (Essential!)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                    
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                        dirx = -1
+                        diry = 0
+                        receiveCmd = True
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                        dirx = 1
+                        diry = 0
+                        receiveCmd = True
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                        dirx = 0
+                        diry = -1
+                        receiveCmd = True
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                        dirx = 0
+                        diry = 1
+                        receiveCmd = True
+                if mode == 1: # Step mode
+                    if receiveCmd:
+                        if world.snakeMove(dirx, diry):
+                            # print(world.snake.getValidMove())
+                            print(world.distance)
+                            pass
+                        else:
+                            flag = False
+                else:
+                    if world.snakeMove(dirx, diry):
+                        pass
+                    else:
+                        flag = False
+
+                flag = flag and world.draw(window, width, height)
+                receiveCmd = False
+
+            print("End.")
+            print("Score is ", len(world.snake.body)-1)
+
+        elif argParse(sys.argv) == "Test":
+            width = row*40
+            height = col*40
+            pygame.init()
+            window = pygame.display.set_mode((width,height))
+            clock = pygame.time.Clock()
+
+
+            world = World(row,col)
+            snake = world.snake
+            world.draw(window, width, height)
+            pygame.time.delay(200)
+
+            while True:       
+                # event listening (Essential!)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+
+                pygame.time.delay(50)
+                clock.tick(10)
+
+                V = snake.getValidMove()
+                if len(V) == 0:
+                    pass
+                else: 
+                    v = V[random.randint(0,len(V)-1)]
+                if world.snakeMove(v[0], v[1]):
+                    pass
+                else:
+                    break
+                world.draw(window, width, height)
+            print("End.")
+            print("Score is ", len(world.snake.body)-1)
+
+        elif argParse(sys.argv) == "Boring":
+            width = row*40
+            height = col*40
+            pygame.init()
+            window = pygame.display.set_mode((width, height))
+            clock = pygame.time.Clock()
+
+
+            world = World(row,col)
+            snake = world.snake
+            world.draw(window, width, height)
+            pygame.time.delay(200)
+
+            while True:       
+                # event listening (Essential!)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+
+                pygame.time.delay(50)
+                clock.tick(10)
+
+                d = boringAgent(world)
+                
+                if d != None:
+                    world.snakeMove(d[0],d[1])
+                    
+                else:
+                    break
+                    # pass
+                world.draw(window, width, height)
+
+            print("End.")
+            print("Score is ", len(world.snake.body)-1)
+            
+        elif argParse(sys.argv) == "Greedy":
+            width = row*40
+            height = col*40
+            pygame.init()
+            window = pygame.display.set_mode((width, height))
+            clock = pygame.time.Clock()
+
+
+            world = World(row,col)
+            snake = world.snake
+            world.draw(window, width, height)
+            pygame.time.delay(200)
+
+            
+
+            while True:       
+                # event listening (Essential!)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+
+                pygame.time.delay(50)
+                clock.tick(10)
+
+                d = Greedy_Agent(world)
+                if d != None:
+                    world.snakeMove(d[0],d[1])
+                else:
+                    break
+                    # pass
+                world.draw(window, width, height)
+
+            print("End.")
+            print("Score is ", len(world.snake.body)-1)
+
+
+
+
+    if argParse(sys.argv) == "Pacman":
+        whosBOSS()
+    elif argParse(sys.argv) == "LongLiveSnake":
         Long_Live_Snake()
 
