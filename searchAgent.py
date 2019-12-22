@@ -6,7 +6,7 @@ def Greedy_Agent(world):
     V = s.getValidMove()
     if len(V) == 0:
         return None
-
+    world.calculateDistance()
     directions = {}
     for v in V:
         directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]

@@ -18,28 +18,10 @@ class World():
             self.distance.append([])
             for x in range(self.row+2):
                 self.distance[y].append(0)
+        self.found = False
+        self.calculateDistance()
 
-
-        for x in range(1,1+self.row):
-            for y in range(1,1+self.col):
-                self.distance[y][x] = float('inf')
-        self.distance[self.food[1]][self.food[0]] = 1
-        visited = []
-        fringe = [self.food]
-        while len(fringe) != 0:
-            loc = fringe[0]
-            visited.append(loc)
-            up = (loc[0],loc[1]-1)
-            down = (loc[0],loc[1]+1)
-            left = (loc[0]-1,loc[1])
-            right = (loc[0]+1,loc[1])
-
-            for d in [up,down,left,right]:
-                if d not in visited and self.distance[d[1]][d[0]] != 0:
-                    fringe.append(d)
-                    visited.append(d)
-                    self.distance[d[1]][d[0]] = self.distance[loc[1]][loc[0]] + 1
-            fringe.pop(0)
+        
 
     def randomPos(self):
         invalidPos = self.snake.body
@@ -64,34 +46,36 @@ class World():
                     self.food = (0,0)
                     return False
                 else:
-                    self.food = temp
+                    self.food = temp     
 
-                    
-                    for x in range(1,1+self.row):
-                        for y in range(1,1+self.col):
-                            self.distance[y][x] = float('inf')
-                    self.distance[self.food[1]][self.food[0]] = 1
-                    visited = []
-                    fringe = [self.food]
-                    while len(fringe) != 0:
-                        loc = fringe[0]
-                        visited.append(loc)
-                        up = (loc[0],loc[1]-1)
-                        down = (loc[0],loc[1]+1)
-                        left = (loc[0]-1,loc[1])
-                        right = (loc[0]+1,loc[1])
-
-                        for d in [up,down,left,right]:
-                            if d not in visited and self.distance[d[1]][d[0]] != 0:
-                                fringe.append(d)
-                                visited.append(d)
-                                self.distance[d[1]][d[0]] = self.distance[loc[1]][loc[0]] + 1
-                        fringe.pop(0)
             return True
         else:
             return False
         
-        
+    def calculateDistance(self):
+        self.found = False
+        for x in range(1,1+self.row):
+            for y in range(1,1+self.col):
+                self.distance[y][x] = float('inf')
+        self.distance[self.food[1]][self.food[0]] = 1
+        head = self.snake.head.pos
+        visited = []
+        fringe = [self.food]
+        while len(fringe) != 0:
+            loc = fringe[0]
+            visited.append(loc)
+            up = (loc[0],loc[1]-1)
+            down = (loc[0],loc[1]+1)
+            left = (loc[0]-1,loc[1])
+            right = (loc[0]+1,loc[1])
+
+            for cube in [up,down,left,right]:
+                if cube not in visited and self.distance[cube[1]][cube[0]] != 0 and cube not in fringe and cube not in self.snake.body:
+                    if cube == head:
+                        self.found = True
+                    fringe.append(cube)
+                    self.distance[cube[1]][cube[0]] = self.distance[loc[1]][loc[0]] + 1
+            fringe.pop(0)
 
         
     def draw(self, window, width, height, background = (255,255,255)):
@@ -164,7 +148,6 @@ class Snake():
         self.dirX = self.head.dirX
         self.dirY = self.head.dirY
         self.mapSize = mapSize
-
         self.boringAgentInit = 0
 
     def move(self, dirx, diry):
