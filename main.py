@@ -245,8 +245,8 @@ if __name__ == '__main__':
                 if d != None:
                     world.snakeMove(d[0],d[1])
                 else:
-                    break
-                    # pass
+                    # break
+                    pass
                 world.draw(window, width, height)
 
             print("End.")

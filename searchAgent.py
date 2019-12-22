@@ -6,11 +6,11 @@ def Greedy_Agent(world):
     V = s.getValidMove()
     if len(V) == 0:
         return None
-    world.calculateDistance()
-    directions = {}
-    for v in V:
-        directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
-    return min(directions, key=directions.get)
+    if world.calculateDistance(world.food):
+        directions = {}
+        for v in V:
+            directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
+        return min(directions, key=directions.get)
 
 
 def Wander_Agent(world):

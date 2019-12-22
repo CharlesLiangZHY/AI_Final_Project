@@ -18,8 +18,7 @@ class World():
             self.distance.append([])
             for x in range(self.row+2):
                 self.distance[y].append(0)
-        self.found = False
-        self.calculateDistance()
+        
 
         
 
@@ -47,20 +46,19 @@ class World():
                     return False
                 else:
                     self.food = temp     
-
             return True
         else:
             return False
         
-    def calculateDistance(self):
-        self.found = False
+    def calculateDistance(self, target):
+        found = False
         for x in range(1,1+self.row):
             for y in range(1,1+self.col):
                 self.distance[y][x] = float('inf')
-        self.distance[self.food[1]][self.food[0]] = 1
+        self.distance[target[1]][target[0]] = 1
         head = self.snake.head.pos
         visited = []
-        fringe = [self.food]
+        fringe = [target]
         while len(fringe) != 0:
             loc = fringe[0]
             visited.append(loc)
@@ -70,12 +68,18 @@ class World():
             right = (loc[0]+1,loc[1])
 
             for cube in [up,down,left,right]:
-                if cube not in visited and self.distance[cube[1]][cube[0]] != 0 and cube not in fringe and cube not in self.snake.body:
+                if cube not in visited and self.distance[cube[1]][cube[0]] != 0 and cube not in fringe and cube not in list(map(lambda z:z.pos, self.snake.body[1:])):
+                    # print(list(map(lambda z:z.pos, self.snake.body[:])))
+                    # print(head)
                     if cube == head:
-                        self.found = True
+                        # print(cube)
+                        found = True
                     fringe.append(cube)
                     self.distance[cube[1]][cube[0]] = self.distance[loc[1]][loc[0]] + 1
+                    
             fringe.pop(0)
+        # print(found)
+        return found
 
         
     def draw(self, window, width, height, background = (255,255,255)):
