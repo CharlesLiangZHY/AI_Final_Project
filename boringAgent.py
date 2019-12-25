@@ -32,7 +32,6 @@ def boringAgent(world):
                     return (-1,0) # left
                 else:
                     if (0,1) in V:
-                        print("OK")
                         return (0,1) # down
             else:
                 if x == 1:

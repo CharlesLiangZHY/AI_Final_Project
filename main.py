@@ -212,7 +212,6 @@ if __name__ == '__main__':
                 move += 1
                 if d != None:
                     world.snakeMove(d[0],d[1])
-                    
                 else:
                     break
                     # pass
@@ -281,7 +280,6 @@ if __name__ == '__main__':
                 d = Forward_Checking_Agent(world)
                 move += 1
                 if d != None:
-                    # print("OK")
                     world.snakeMove(d[0],d[1])
                 else:
                     break

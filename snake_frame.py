@@ -9,27 +9,33 @@ import numpy as np
 class World():
 
     def __init__(self, row=20, col = 20):
+        
         self.row = row
         self.col = col
         self.snake = Snake((self.row // 2 + 1, self.col // 2 + 1), [self.row, self.col])
+        
         self.food = self.randomPos()
         self.distance = []
+        
         for y in range(self.col+2):
             self.distance.append([])
             for x in range(self.row+2):
                 self.distance[y].append(0)
         
-
+        
         
 
     def randomPos(self):
+        
         invalidPos = self.snake.body
+        # print(invalidPos)
         if len(invalidPos) == self.row * self.col:
             return False
         while True:
             x = random.randint(1,self.row)
             y = random.randint(1,self.col)
             if len(list(filter(lambda z:z.pos == (x,y), invalidPos))) > 0:
+                # print("OK2")
                 continue
             else:
                 break
@@ -148,9 +154,9 @@ class Cube():
 
 
 class Snake():
-    body = []
-    turns = {} # record which direction the cube is goint to turn if it reaches this position
     def __init__(self, headLoc, mapSize):
+        self.body = []
+        self.turns = {} # record which direction the cube is goint to turn if it reaches this position
         self.head = Cube(headLoc, 0, 0, (0,0,0)) 
         self.body.append(self.head)
         self.dirX = self.head.dirX
