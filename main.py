@@ -76,8 +76,8 @@ def argParse(argv):
         return "Forward"
 
 if __name__ == '__main__':
-    row = 8
-    col = 8
+    row = 10
+    col = 10
     for i in range(len(sys.argv)):
         if sys.argv[i] == '-w':
             row = int(sys.argv[i+1])
@@ -197,6 +197,8 @@ if __name__ == '__main__':
             world.draw(window, width, height)
             pygame.time.delay(200)
 
+            move = 0
+
             while True:       
                 # event listening (Essential!)
                 for event in pygame.event.get():
@@ -207,7 +209,7 @@ if __name__ == '__main__':
                 clock.tick(10)
 
                 d = boringAgent(world)
-                
+                move += 1
                 if d != None:
                     world.snakeMove(d[0],d[1])
                     
@@ -217,7 +219,7 @@ if __name__ == '__main__':
                 world.draw(window, width, height)
 
             print("End.")
-            print("Score is ", len(world.snake.body)-1)
+            print("Score is ", len(world.snake.body)-1, ". Used ", move, "moves.")
             
         elif argParse(sys.argv) == "Greedy":
             width = row*40
@@ -266,29 +268,18 @@ if __name__ == '__main__':
             snake = world.snake
             world.draw(window, width, height)
             pygame.time.delay(200)
-
-            # d = Forward_Checking_Agent(world)
-            # print(d)
-            
-            # if d != None:
-            #     # print("OK")
-            #     world.snakeMove(d[0],d[1])
-            # else:
-            #     # break
-            #     pass
-            # # print(world.snake.head.pos)
-            # world.draw(window, width, height)
-            
+            move = 0
             while True:       
                 # event listening (Essential!)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
 
-                pygame.time.delay(50)
-                clock.tick(10)
+                pygame.time.delay(25)
+                clock.tick(50)
                 
                 d = Forward_Checking_Agent(world)
+                move += 1
                 if d != None:
                     # print("OK")
                     world.snakeMove(d[0],d[1])
@@ -298,7 +289,7 @@ if __name__ == '__main__':
                 world.draw(window, width, height)
 
             print("End.")
-            print("Score is ", len(world.snake.body)-1)
+            print("Score is ", len(world.snake.body)-1, ". Used ", move, "moves.")
 
     if argParse(sys.argv) == "Pacman":
         whosBOSS()

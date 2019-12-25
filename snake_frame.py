@@ -157,7 +157,6 @@ class Snake():
         self.dirY = self.head.dirY
         self.mapSize = mapSize
         self.boringAgentInit = 0
-        # self.fwdCkFailTime = 0
 
     def move(self, dirx, diry):
 
@@ -236,7 +235,7 @@ class Snake():
 
         self.body[-1].dirX = oldTail.dirX 
         self.body[-1].dirY = oldTail.dirY
-        self.fwdCkFailTime = 0
+        
 
     def draw(self, window, grid): 
         for cube in self.body:

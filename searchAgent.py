@@ -54,36 +54,46 @@ def Forward_Checking_Agent(world):
         virtualWorld.snake.turns = copy.deepcopy(world.snake.turns)
         
         if forwardCheck(virtualWorld):
-            print("Not cause trouble and go to eat food")
+
+            # print("Not cause trouble and go to eat food")
+
             directions = {}
             for v in V:
                 directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
             return min(directions, key=directions.get)
         else:
+
             if world.calculateDistance(s.body[-1].pos):
-                print("Cause trouble, follow tail")
-                s.fwdCkFailTime += 1
-                directions = {}
+
+                # print("Cause trouble, follow tail")
+
+                # directions = {}
+                # for v in V:
+                #     if world.distance[v[1]+head[1]][v[0]+head[0]] != float('inf'):
+                #         directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
+                # return max(directions, key=directions.get)
+                directions = []
                 for v in V:
                     if world.distance[v[1]+head[1]][v[0]+head[0]] != float('inf'):
-                        directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
-                return max(directions, key=directions.get)
-            else:
-                print("Can not follow tail, eat food in the longest way")
-                world.calculateDistance(f)
-                directions = {}
-                for v in V:
-                    if world.distance[v[1]+head[1]][v[0]+head[0]] != float('inf'):
-                        directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
-                return max(directions, key=directions.get)
+                        directions.append(v)
+                # print(len(V))
+                return directions[random.randint(0,len(directions)-1)]
     else:
         if world.calculateDistance(s.body[-1].pos):
-            print("At least we can follow tail")
-            directions = {}
+
+            # print("At least we can follow tail")
+
+            # directions = {}
+            # for v in V:
+            #     if world.distance[v[1]+head[1]][v[0]+head[0]] != float('inf'):
+            #         directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
+            # return max(directions, key=directions.get)
+            directions = []
             for v in V:
                 if world.distance[v[1]+head[1]][v[0]+head[0]] != float('inf'):
-                    directions[v] = world.distance[v[1]+head[1]][v[0]+head[0]]
-            return max(directions, key=directions.get)
+                    directions.append(v)
+            # print(len(V))
+            return directions[random.randint(0,len(directions)-1)]
         else:
             print("WTF")
             return V[random.randint(0,len(V)-1)]
