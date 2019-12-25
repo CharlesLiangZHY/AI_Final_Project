@@ -74,8 +74,9 @@ class World():
                     if cube == head:
                         # print(cube)
                         found = True
-                    fringe.append(cube)
-                    self.distance[cube[1]][cube[0]] = self.distance[loc[1]][loc[0]] + 1
+                    else:
+                        fringe.append(cube)
+                        self.distance[cube[1]][cube[0]] = self.distance[loc[1]][loc[0]] + 1
                     
             fringe.pop(0)
         # print(found)
@@ -108,7 +109,7 @@ class World():
 
 
             self.snake.draw(window, grid)
-
+            
 
             pygame.display.update()
             return True
@@ -136,11 +137,14 @@ class Cube():
         self.pos =  (self.pos[0] + self.dirX, self.pos[1] + self.dirY)
         
 
-    def draw(self, window, grid, eyes=False):
+    def draw(self, window, grid, debug=False):
         x = self.pos[0]-1
         y = self.pos[1]-1
-        pygame.draw.rect(window, self.color, (x*grid+1, y*grid+1, grid-2, grid-2))
-        
+        if debug == False:
+            pygame.draw.rect(window, self.color, (x*grid+1, y*grid+1, grid-2, grid-2))
+        else:
+            pygame.draw.rect(window, (255,0,0), (x*grid+1, y*grid+1, grid-2, grid-2))
+
 
 
 class Snake():
@@ -153,6 +157,7 @@ class Snake():
         self.dirY = self.head.dirY
         self.mapSize = mapSize
         self.boringAgentInit = 0
+        # self.fwdCkFailTime = 0
 
     def move(self, dirx, diry):
 
@@ -181,7 +186,9 @@ class Snake():
                 if index == len(self.body)-1: # tail
                     self.turns.pop(p)
             else:
+                
                 cube.move(cube.dirX, cube.dirY)
+                
 
         # Invalid move: Eating itself
         if (self.head.pos[0], self.head.pos[1]) in list(map(lambda z:z.pos, self.body[1:])):
@@ -229,10 +236,17 @@ class Snake():
 
         self.body[-1].dirX = oldTail.dirX 
         self.body[-1].dirY = oldTail.dirY
+        self.fwdCkFailTime = 0
 
     def draw(self, window, grid): 
         for cube in self.body:
-            cube.draw(window, grid)
+            if cube == self.body[-1] and len(self.body) > 1:
+                cube.draw(window, grid, True)
+            else:
+                cube.draw(window, grid)
+
+            # cube.draw(window, grid)
+            
 
 
 

@@ -7,5 +7,5 @@ Enter "python3 main.py -k" in terminal to play
 -random                                Random move agent
 -boring                                Hamiltonian path strategy
 -g                                     Greedy agent
-
+-f                                     Forward checking agent
 
