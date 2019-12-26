@@ -130,10 +130,10 @@ if __name__ == '__main__':
                 if mode == 1: # Step mode
                     if receiveCmd:
                         if world.snakeMove(dirx, diry):
-                            print(world.snake.getValidMove())
-                            print(world.snake.body[-1].pos)
-                            world.calculateDistance(world.snake.body[-1].pos)
-                            print(world.distance)
+                            # print(world.snake.getValidMove())
+                            # print(world.snake.body[-1].pos)
+                            # world.calculateDistance(world.snake.body[-1].pos)
+                            # print(world.distance)
                             pass
                         else:
                             flag = False

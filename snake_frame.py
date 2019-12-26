@@ -88,6 +88,38 @@ class World():
         # print(found)
         return found
 
+    def GreedycalculateDistance(self, target):
+        found = False
+        for x in range(1,1+self.row):
+            for y in range(1,1+self.col):
+                self.distance[y][x] = float('inf')
+        self.distance[target[1]][target[0]] = 1
+        head = self.snake.head.pos
+        visited = []
+        fringe = [target]
+        while len(fringe) != 0:
+            loc = fringe[0]
+            visited.append(loc)
+            up = (loc[0],loc[1]-1)
+            down = (loc[0],loc[1]+1)
+            left = (loc[0]-1,loc[1])
+            right = (loc[0]+1,loc[1])
+
+            for cube in [up,down,left,right]:
+                if cube not in visited and self.distance[cube[1]][cube[0]] != 0 and cube not in fringe:
+                    # print(list(map(lambda z:z.pos, self.snake.body[:])))
+                    # print(head)
+                    if cube == head:
+                        # print(cube)
+                        found = True
+                    else:
+                        fringe.append(cube)
+                        self.distance[cube[1]][cube[0]] = self.distance[loc[1]][loc[0]] + 1
+                    
+            fringe.pop(0)
+        # print(found)
+        return found
+
         
     def draw(self, window, width, height, background = (255,255,255)):
         if width < 10*self.row and height < 10*self.col:
