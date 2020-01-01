@@ -149,3 +149,27 @@ def boringAgent(world):
                             return (0,-1) # up
                         else:
                             return (-1,0) #left
+
+
+
+'''
+Boring Agent
+Map size is 3 Average move:  37
+Map size is 4 Average move:  72
+Map size is 5 Average move:  223
+Map size is 6 Average move:  334
+Map size is 7 Average move:  757
+Map size is 8 Average move:  1036
+Map size is 9 Average move:  1924
+Map size is 10 Average move:  2491
+Map size is 11 Average move:  4145
+Map size is 12 Average move:  5237
+Map size is 13 Average move:  7866
+Map size is 14 Average move:  9680
+Map size is 15 Average move:  13681
+Map size is 16 Average move:  16488
+Map size is 17 Average move:  22253
+Map size is 18 Average move:  26380
+Map size is 19 Average move:  34354
+Map size is 20 Average move:  40063
+'''

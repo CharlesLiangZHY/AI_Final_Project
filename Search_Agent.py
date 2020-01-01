@@ -1,49 +1,28 @@
 from newFrame import *
 
-def greedyAgent(world, fakeSearch = True):
+'''
+This naive greedy search algorithm has a one-move horizon and
+only considers moving the snake to the position which appears to
+be closest to the food (even never considering whether its body 
+blocked the way to the food). I use Manhattan distance to define
+how close the snake head is to the food.
+'''
+def ManhattanDistance(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def veryNaiveGreedyAgent(world):
     r = world.row
     c = world.col
     S = world.curState
     V = getValidMove(S, r, c)
     if len(V) == 0:
-            return None
+        return None
 
     food = S[0]
     head = S[1]
-
-    if fakeSearch:
-        distance = []
-        for x in range(c+2):
-            distance.append([])
-            for y in range(r+2):
-                distance[x].append(None)
-
-        found = False
-        for x in range(1,c+1):
-            for y in range(1,r+1):
-                distance[x][y] = float('inf')
-        distance[food[0]][food[1]] = 0
-        
-        visited = []
-        fringe = [food]
-        while len(fringe) != 0:
-            loc = fringe[0] # BFS: FIFO fringe
-            visited.append(loc) # graph search
-            up = (loc[0],loc[1]-1)
-            down = (loc[0],loc[1]+1)
-            left = (loc[0]-1,loc[1])
-            right = (loc[0]+1,loc[1])
-            for pos in [up,down,left,right]:
-                if pos not in visited and distance[pos[0]][pos[1]] != None and pos not in fringe:
-                    if pos == head:
-                        found = True
-                    else:
-                        fringe.append(pos)
-                        distance[pos[0]][pos[1]] = distance[loc[0]][loc[1]] + 1  
-            fringe.pop(0) # BFS: FIFO fringe
-        
-        directions = {}
-        for v in V:
-            directions[v] = distance[v[0]+head[0]][v[1]+head[1]]
-        return min(directions, key=directions.get)
-        
+    directions = {}
+    for v in V:
+        pos = (head[0]+v[0], head[1]+v[1])
+        directions[v] = ManhattanDistance(food, pos)
+    
+    return min(directions, key=directions.get)

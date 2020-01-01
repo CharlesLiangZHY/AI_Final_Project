@@ -2,6 +2,7 @@ from newFrame import *
 import ASIIC_Art
 import Boring_Agent
 import Search_Agent
+import LongLive_Agent
 
 def argParse(argv):
     if '-s' in argv:
@@ -14,6 +15,7 @@ def argParse(argv):
         return "Boring"
     elif '-g' in sys.argv:
         return "Greedy"
+    
 
 def visualize(agent, col, row, grid, timeDelay):
     width = col * grid
@@ -153,11 +155,14 @@ if __name__ == '__main__':
             else:
                 run(Boring_Agent.boringAgent, col, row)
         elif argParse(sys.argv) == "Greedy":
+
+            greedyAgent = Search_Agent.veryNaiveGreedyAgent
+
             if visualization:
                 timeDelay = 25
-                visualize(Search_Agent.greedyAgent, col, row, grid, timeDelay)
+                visualize(greedyAgent, col, row, grid, timeDelay)
             else:
-                run(Search_Agent.greedyAgent, col, row)
+                run(greedyAgent, col, row)
 
     
 
