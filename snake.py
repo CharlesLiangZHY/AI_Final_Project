@@ -14,13 +14,70 @@ def argParse(argv):
         return "Boring"
     elif '-g' in sys.argv:
         return "Greedy"
+
+def visualize(agent, col, row, grid, timeDelay):
+    width = col * grid
+    height = row * grid
+    pygame.init()
+    window = pygame.display.set_mode((width,height))
+    clock = pygame.time.Clock()
+
+    world = Simplified_World(row,col)
+    world.draw(window, width, height)
+
+    move = 0
+    while True:
+        pygame.time.delay(25)
+        clock.tick(50) # frame
+        # event listening (Essential!)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        
+        d = agent(world)
+        move += 1
+        if d != None:
+            if world.moveSnake(d[0],d[1]):
+                pass
+            else:
+                break
+                # pass
+        else:
+            break
+        world.draw(window, width, height)
+        pygame.time.delay(timeDelay)
+
+    score = len(world.curState)-2
+    print("The map size is", row, "x", col, "; Score is", score, "; Used", move-1, "moves.")  
+    if score == row*col - 1:
+        print("Success!")
+
+def run(agent, col, row):
+    world = Simplified_World(row,col)
+
+    move = 0
+    while True:
+        d = agent(world)
+        move += 1
+        if d != None:
+            if world.moveSnake(d[0],d[1]):
+                pass
+            else:
+                break
+        else:
+            break
     
+    score = len(world.curState)-2
+    print("The map size is", row, "x", col, "; Score is", score, "; Used", move-1, "moves.")  
+    if score == row*col - 1:
+        print("Success!")
 
 if __name__ == '__main__':
     row = 10 # default
     col = 10 # default
     grid = 40 # default
-    # parsing #row, #col and grid side length 
+    visualization = True
+    # parsing arguments
     for i in range(len(sys.argv)):
         if sys.argv[i] == '-w':
             col = int(sys.argv[i+1])
@@ -30,6 +87,8 @@ if __name__ == '__main__':
             continue
         elif sys.argv[i] == '-grid':
             grid = int(sys.argv[i+1])
+        elif sys.argv[i] == '-nv': # not to visualize
+            visualization = False
     if row < 2 or col < 2:
         print("The map is too small!")
     else:
@@ -88,74 +147,19 @@ if __name__ == '__main__':
                 pygame.time.delay(25)
 
         elif argParse(sys.argv) == "Boring":
-            width = col * grid
-            height = row * grid
-            pygame.init()
-            window = pygame.display.set_mode((width,height))
-            clock = pygame.time.Clock()
-
-            world = Simplified_World(row,col)
-            world.draw(window, width, height)
-
-            move = 0
-            while True:
-                pygame.time.delay(25)
-                clock.tick(50) # frame
-                # event listening (Essential!)
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                
-                d = Boring_Agent.boringAgent(world)
-                move += 1
-                if d != None:
-                    if world.moveSnake(d[0],d[1]):
-                        pass
-                    else:
-                        break
-                        # pass
-                else:
-                    break
-                world.draw(window, width, height)
-                pygame.time.delay(25)
-
-            print("End.")
-            print("Score is ", len(world.curState)-2, ". Used ", move-1, "moves.")
+            if visualization:
+                timeDelay = 25
+                visualize(Boring_Agent.boringAgent, col, row, grid, timeDelay)
+            else:
+                run(Boring_Agent.boringAgent, col, row)
         elif argParse(sys.argv) == "Greedy":
-            width = col * grid
-            height = row * grid
-            pygame.init()
-            window = pygame.display.set_mode((width,height))
-            clock = pygame.time.Clock()
+            if visualization:
+                timeDelay = 25
+                visualize(Search_Agent.greedyAgent, col, row, grid, timeDelay)
+            else:
+                run(Search_Agent.greedyAgent, col, row)
 
-            world = Simplified_World(row,col)
-            world.draw(window, width, height)
-
-            move = 0
-            while True:
-                pygame.time.delay(25)
-                clock.tick(50) # frame
-                # event listening (Essential!)
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                
-                d = Search_Agent.greedyAgent(world)
-                move += 1
-                if d != None:
-                    if world.moveSnake(d[0],d[1]):
-                        pass
-                    else:
-                        break
-                        # pass
-                else:
-                    break
-                world.draw(window, width, height)
-                pygame.time.delay(25)
-
-            print("End.")
-            print("Score is ", len(world.curState)-2, ". Used ", move-1, "moves.")
-
+    
 
 
 
