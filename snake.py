@@ -43,9 +43,9 @@ def visualize(agent, col, row, grid, timeDelay):
                 pass
             else:
                 break
-                # pass
         else:
-            break
+            # break
+            pass # will hold on the termination
         world.draw(window, width, height)
         pygame.time.delay(timeDelay)
 
@@ -156,7 +156,8 @@ if __name__ == '__main__':
                 run(Boring_Agent.boringAgent, col, row)
         elif argParse(sys.argv) == "Greedy":
 
-            greedyAgent = Search_Agent.veryNaiveGreedyAgent
+            # greedyAgent = Search_Agent.veryNaiveGreedyAgent
+            greedyAgent = Search_Agent.stillNaiveGreedyAgent
 
             if visualization:
                 timeDelay = 25
