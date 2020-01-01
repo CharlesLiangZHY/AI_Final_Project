@@ -31,7 +31,7 @@ def visualize(agent, col, row, grid, timeDelay):
 
     move = 0
     while True:
-        pygame.time.delay(25)
+        pygame.time.delay(5)
         clock.tick(50) # frame
         # event listening (Essential!)
         for event in pygame.event.get():
@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
         elif argParse(sys.argv) == "Boring":
             if visualization:
-                timeDelay = 25
+                timeDelay = 10
                 visualize(Boring_Agent.boringAgent, col, row, grid, timeDelay)
             else:
                 run(Boring_Agent.boringAgent, col, row)
