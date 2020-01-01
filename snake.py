@@ -9,12 +9,14 @@ def argParse(argv):
         return "Debug"
     elif '-pacman' in sys.argv:
         return "Pacman"
-    elif '-ll' in sys.argv:
+    elif '-Snake' in sys.argv:
         return "LongLiveSnake"
     elif '-b' in sys.argv:
         return "Boring"
     elif '-g' in sys.argv:
         return "Greedy"
+    elif '-ll' in sys.argv:
+        return "LongLive"
     
 
 def visualize(agent, col, row, grid, timeDelay):
@@ -44,8 +46,8 @@ def visualize(agent, col, row, grid, timeDelay):
             else:
                 break
         else:
-            # break
-            pass # will hold on the termination
+            break
+            # pass # will hold on the termination
         world.draw(window, width, height)
         pygame.time.delay(timeDelay)
 
@@ -58,7 +60,7 @@ def run(agent, col, row):
     world = Simplified_World(row,col)
 
     move = 0
-    while True:
+    while True and move < (row*col)**2: # to avoid endless loops
         d = agent(world)
         move += 1
         if d != None:
@@ -156,8 +158,8 @@ if __name__ == '__main__':
                 run(Boring_Agent.boringAgent, col, row)
         elif argParse(sys.argv) == "Greedy":
 
-            # greedyAgent = Search_Agent.veryNaiveGreedyAgent
-            greedyAgent = Search_Agent.stillNaiveGreedyAgent
+            greedyAgent = Search_Agent.veryNaiveGreedyAgent
+            # greedyAgent = Search_Agent.stillNaiveGreedyAgent
 
             if visualization:
                 timeDelay = 25
@@ -165,6 +167,12 @@ if __name__ == '__main__':
             else:
                 run(greedyAgent, col, row)
 
+        elif argParse(sys.argv) == "LongLive":
+            if visualization:
+                timeDelay = 25
+                visualize(LongLive_Agent.longLiveAgent, col, row, grid, timeDelay)
+            else:
+                run(LongLive_Agent.longLiveAgent, col, row)
     
 
 

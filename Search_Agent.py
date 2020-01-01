@@ -34,7 +34,9 @@ closest to the food. But it will actually find out the shortest path
 using BFS. However, it will not find out the potential shortest path 
 to the food because of its one-move horizon. When the agent can not 
 find out any obvious path to the food, it will fail. The difference 
-can be seen through visualization of the snake moving.
+can be seen through visualization of the snake moving. 
+Tips: Remember to uncomment the line: 
+    "# pass # will hold on the termination" in visualize() function.
 '''
 def stillNaiveGreedyAgent(world):
     r = world.row

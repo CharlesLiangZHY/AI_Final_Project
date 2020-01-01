@@ -25,8 +25,6 @@ class Simplified_World():
         if newState == None:
             return False
         self.curState = newState
-        if self.curState[0] == None: # food was eaten
-            self.curState[0] = randomPos(self.curState, self.row, self.col)
         return True
 
 
@@ -94,10 +92,10 @@ def snakeMove(curState, row, col, dirx, diry):
     if (dirx, diry) not in getValidMove(curState, row, col):
         return None
     newHead = (curState[1][0] + dirx, curState[1][1] + diry)
-    newState = copy.deepcopy(curState)
+    newState = copy.deepcopy(curState) # will not affect the origin state
     newState.insert(1, newHead)
-    if newHead == newState[0]:
-        newState[0] = None
+    if newHead == newState[0]: # food was eaten
+        newState[0] = randomPos(newState, row, col)
     else:
         newState.pop()
     return newState
