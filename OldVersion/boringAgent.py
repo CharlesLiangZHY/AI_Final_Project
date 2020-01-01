@@ -1,10 +1,5 @@
 from snake_frame import *
 
-
-
-
-
-
 def boringAgent(world):
     r = world.row
     c = world.col
