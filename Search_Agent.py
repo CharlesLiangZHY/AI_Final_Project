@@ -102,7 +102,7 @@ def bfsAgent(world):
     r = world.row
     c = world.col
     if r > 8 or c > 8:
-        print("The map size should be smaller")
+        print("The map size should be smaller.")
         return None
     S = world.curState
     V = getValidMove(S, r, c)
@@ -141,7 +141,7 @@ def astarAgent(world):
     r = world.row
     c = world.col
     if r > 8 or c > 8:
-        print("The map size should be smaller")
+        print("The map size should be smaller.")
         return None
     S = world.curState
     V = getValidMove(S, r, c)
@@ -182,24 +182,83 @@ is n-step, it will do a n-step BFS to check whether all successores in n-step
 are possible dead ends. Here we consider the situation that the snake can not 
 move following its tail as the dead end.
 '''
+def calculateDistance(distance, r, c, target, state): # copy from LongLive_Agent.py
+    head = state[1] # snake head
+    found = False
+    # initialize distance table
+    for x in range(1,c+1):
+        for y in range(1,r+1):
+            distance[x][y] = float('inf')
+    distance[target[0]][target[1]] = 0
+
+    # BFS starts from the target position and ends at the snake head
+    visited = [] # Graph search
+    fringe = [target]
+    while len(fringe) != 0:
+        cur = fringe[0] # BFS: FIFO fringe
+        visited.append(cur)
+
+        up = (cur[0],cur[1]-1)     # successor after action ( 0,-1)
+        down = (cur[0],cur[1]+1)   # successor after action ( 0, 1)
+        left = (cur[0]-1,cur[1])   # successor after action (-1, 0)
+        right = (cur[0]+1,cur[1])  # successor after action ( 1, 0)
+        for pos in [up,down,left,right]:
+            # 1. not visited 2. not border 3. not have been expanded 4. not part of snake body
+            if pos not in visited and distance[pos[0]][pos[1]] != None and pos not in fringe and pos not in state[2:]:
+                if pos == head: # reach the head 
+                    found = True # path to target is found
+                    # stop expanding after reaching the head
+                else:
+                    fringe.append(pos)
+                    distance[pos[0]][pos[1]] = distance[cur[0]][cur[1]] + 1 # update distance
+        fringe.pop(0)  # BFS: FIFO fringe
+    return found # if found == False, there is no obvious path from head to target
+
 def forwardCheck(state, r, c, forwardStep):
+    # initialize the distance table
+    V = getValidMove(state, r, c)
+    if len(V) == 0:
+        return False
+
+    distance = []
+    for x in range(c+2):
+        distance.append([])
+        for y in range(r+2):
+            distance[x].append(None)
+
     fringe = []
     expanded = set()
-    fringe.append((tuple(state), 0)) # stores the node level of the search tree
-    
+    fringe.append((state, 0)) # stores the node level of the search tree
+    while not len(fringe) == 0:
+        cur, level = fringe.pop(0) # BFS: FIFO fringe
+        tail = cur[-1]
+        if calculateDistance(distance, r, c, tail, cur):
+            return True # safe
+        expanded.add(cur)
+        if level < forwardStep: # limit expansion depth
+            V = getValidMove(cur, r, c)
+            for v in V:
+                newState = tuple(snakeMove(list(cur), r, c, v[0], v[1]))
+                if newState in expanded:
+                    continue
+                else:
+                    fringe.append((newState, level+1))
+    return False
 
-def astarForwardCheckingAgent(world, forwardStep = 3):
+def astarForwardCheckingAgent(world, forwardStep = 2):
     r = world.row
     c = world.col
-    if r > 8 or c > 8:
-        print("The map size should be smaller")
+    if r > 7 or c > 7:
+        print("The map size should be smaller. The recommended map size for this agent is 6x6.")
         return None
     S = world.curState
+    length = len(S) # goal test is that length of state grows
     V = getValidMove(S, r, c)
     if len(V) == 0:
         return None
+    if length == r*c: # final step
+        return V[0]
 
-    length = len(S) # goal test is that length of state grows
     fringe = priorityQueue() # use priority queue for Astar successor function
     expanded = set()
 
@@ -207,22 +266,25 @@ def astarForwardCheckingAgent(world, forwardStep = 3):
     while not fringe.isEmpty():
         cur, moves, cost = fringe.pop()
 
-        if len(cur) == length + 1: # eaten food, body grew
+        safe = forwardCheck(cur, r, c, forwardStep)
+        if len(cur) == length + 1 and safe: # eaten food, body grew
             return moves[0]
-        
-        expanded.add(cur)
-        V = getValidMove(cur, r, c)
-        for v in V:
-            newState = tuple(snakeMove(list(cur), r, c, v[0], v[1]))
-            g = cost + 1
-            h = 0 if len(newState) == length+1 else ManhattanDistance(newState[0], newState[1])
-            f = g + h
-            if newState in expanded:
-                continue
-            else:
-                fringe.push((newState, moves + [v], g), f)
+        expanded.add(cur) # graph search
+        if len(cur) == length + 1 and not safe:
+            pass # Discard this branch
+        else:
+            V = getValidMove(cur, r, c)
+            for v in V:
+                newState = tuple(snakeMove(list(cur), r, c, v[0], v[1]))
+                g = cost + 1
+                h = 0 if len(newState) == length+1 else ManhattanDistance(newState[0], newState[1])
+                f = g + h
+                if newState in expanded:
+                    continue
+                else:
+                    fringe.push((newState, moves + [v], g), f)
 
     # uncomment two lines below, the snake will stop if it can not find a path to food
-    V = getValidMove(S, r, c)
-    return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
+    # V = getValidMove(S, r, c)
+    # return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
 

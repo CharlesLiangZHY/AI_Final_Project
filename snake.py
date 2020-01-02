@@ -23,7 +23,8 @@ def argParse(argv):
         return "BFS"
     elif '-astar' in sys.argv:
         return "Astar"
-    
+    elif '-fw' in sys.argv:
+        return "AstarForwardChecking"
     
 
 def visualize(agent, col, row, grid, timeDelay):
@@ -53,8 +54,8 @@ def visualize(agent, col, row, grid, timeDelay):
             else:
                 break
         else:
-            # break
-            pass # It will hold on the termination.
+            break
+            # pass # It will hold on the termination.
         world.draw(window, width, height)
         pygame.time.delay(timeDelay)
 
@@ -218,6 +219,13 @@ if __name__ == '__main__':
                 visualize(Search_Agent.astarAgent, col, row, grid, timeDelay)
             else:
                 run(Search_Agent.astarAgent, col, row)
+        
+        elif argParse(sys.argv) == "AstarForwardChecking":
+            if visualization:
+                timeDelay = 25
+                visualize(Search_Agent.astarForwardCheckingAgent, col, row, grid, timeDelay)
+            else:
+                run(Search_Agent.astarForwardCheckingAgent, col, row)
 
 
         
