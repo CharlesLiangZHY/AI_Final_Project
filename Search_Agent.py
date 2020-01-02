@@ -93,14 +93,15 @@ def stillNaiveGreedyAgent(world):
 
 '''
 Here I am going to implement a real BFS and Astar agent,which will 
-be really resource-consuming. It will return a sequence of moves 
-leading the snake to eat the food. Without forward checking, both 
-agents will fall into dead end very easily.
+be really resource-consuming. Without forward checking, both 
+agents will fall into dead end very easily. To maintain consistency
+of code, although it can return a sequence of moves leading the snake
+to eat the food, I still let it return the next move.
 '''
 def bfsAgent(world):
     r = world.row
     c = world.col
-    if r > 10 or c > 10:
+    if r > 8 or c > 8:
         print("The map size should be smaller")
         return None
     S = world.curState
@@ -114,7 +115,7 @@ def bfsAgent(world):
 
     fringe.append((tuple(S),[])) # start state
     while not len(fringe) == 0:
-        cur, moves = fringe.pop(0)
+        cur, moves = fringe.pop(0) # BFS: FIFO fringe
 
         if len(cur) == length + 1: # eaten food, body grew
             return moves[0]
@@ -129,7 +130,46 @@ def bfsAgent(world):
                 fringe.append((newState, moves + [v]))
     V = getValidMove(S, r, c)
     return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
+'''
+My heuristic function is the Manhattan Distance between snake head 
+and food. Combined with the cumulative cost, we have the successor
+function.
+'''
+def astarAgent(world):
+    r = world.row
+    c = world.col
+    if r > 8 or c > 8:
+        print("The map size should be smaller")
+        return None
+    S = world.curState
+    V = getValidMove(S, r, c)
+    if len(V) == 0:
+        return None
 
+    length = len(S) # goal test is that length of state grows
+    fringe = priorityQueue() # use priority queue for Astar successor function
+    expanded = set()
+
+    fringe.push((tuple(S),[], 0), ManhattanDistance(S[0], S[1])) # start state, additional store the cumulative cost
+    while not fringe.isEmpty():
+        cur, moves, cost = fringe.pop()
+
+        if len(cur) == length + 1: # eaten food, body grew
+            return moves[0]
+        
+        expanded.add(cur)
+        V = getValidMove(cur, r, c)
+        for v in V:
+            newState = tuple(snakeMove(list(cur), r, c, v[0], v[1]))
+            g = cost + 1
+            h = 0 if len(newState) == length+1 else ManhattanDistance(newState[0], newState[1])
+            f = g + h
+            if newState in expanded:
+                continue
+            else:
+                fringe.push((newState, moves + [v], g), f)
+    V = getValidMove(S, r, c)
+    return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
 
 
 

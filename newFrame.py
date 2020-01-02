@@ -4,6 +4,7 @@ import math
 import random
 import sys
 import copy
+import heapq
 
 import numpy as np
 
@@ -130,5 +131,19 @@ def getValidMove(curState, row, col):
             validMove.append(d)
     return validMove
 
+class priorityQueue: # pop the entry with the lowest priority
+    def  __init__(self):
+        self.heap = []
+        self.count = 0
 
+    def push(self, item, priority):
+        entry = (priority, self.count, item)
+        heapq.heappush(self.heap, entry)
+        self.count += 1
 
+    def pop(self):
+        (_, _, item) = heapq.heappop(self.heap)
+        return item
+
+    def isEmpty(self):
+        return len(self.heap) == 0

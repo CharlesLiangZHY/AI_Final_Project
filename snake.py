@@ -21,6 +21,8 @@ def argParse(argv):
         return "LongLive"
     elif '-bfs' in sys.argv:
         return "BFS"
+    elif '-astar' in sys.argv:
+        return "Astar"
     
     
 
@@ -103,7 +105,7 @@ if __name__ == '__main__':
         elif sys.argv[i] == '-h':
             row = int(sys.argv[i+1])
             continue
-        elif sys.argv[i] == 'wh':
+        elif sys.argv[i] == '-wh':
             row = int(sys.argv[i+1])
             col = int(sys.argv[i+1])
             continue
@@ -208,7 +210,14 @@ if __name__ == '__main__':
                 timeDelay = 25
                 visualize(Search_Agent.bfsAgent, col, row, grid, timeDelay)
             else:
-                run(LongLive_Agent.bfsAgent, col, row)
+                run(Search_Agent.bfsAgent, col, row)
+
+        elif argParse(sys.argv) == "Astar":
+            if visualization:
+                timeDelay = 25
+                visualize(Search_Agent.astarAgent, col, row, grid, timeDelay)
+            else:
+                run(Search_Agent.astarAgent, col, row)
 
 
         
