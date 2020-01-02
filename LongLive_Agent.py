@@ -45,7 +45,7 @@ def calculateDistance(distance, r, c, target, state):
     return found # if found == False, there is no obvious path from head to target
 
 def naiveForwardCheckDanger(state, r, c):
-    if len(state) == r*c - 2:
+    if len(state) == r*c:
         return True
 
     # initialize the distance table
@@ -73,18 +73,6 @@ def naiveForwardCheckDanger(state, r, c):
 
     tail = state[-1]
     return calculateDistance(distance, r, c, tail, state)
-
-# def naiveForwardCheckTail(state, r, c, d):
-#     # initialize the distance table
-#     tempDistance = []
-#     for x in range(c+2):
-#         distance.append([])
-#         for y in range(r+2):
-#             distance[x].append(None)
-
-#     tempState = snakeMove(state, r, c, d[0], d[1])
-#     tail = tempState[-1] # the last entry
-#     return calculateDistance(tempDistance, tail, tempState)
 
 def longLiveAgent(world):
     r = world.row

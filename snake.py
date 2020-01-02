@@ -53,8 +53,8 @@ def visualize(agent, col, row, grid, timeDelay):
             else:
                 break
         else:
-            break
-            # pass # It will hold on the termination.
+            # break
+            pass # It will hold on the termination.
         world.draw(window, width, height)
         pygame.time.delay(timeDelay)
 
@@ -93,8 +93,8 @@ def randomAgent(world):
     return V[random.randint(0, len(V)-1)]
 
 if __name__ == '__main__':
-    row = 10 # default
-    col = 10 # default
+    row = 8 # default
+    col = 8 # default
     grid = 40 # default
     visualization = True
     # parsing arguments

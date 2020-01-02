@@ -29,7 +29,7 @@ class Simplified_World():
         return True
 
 
-    def draw(self, window, width, height, markTail = False, background = (255,255,255)):
+    def draw(self, window, width, height, markTail = True, background = (255,255,255)):
         if width < 10*self.row and height < 10*self.col:
             print("The window is too small.")
             return False

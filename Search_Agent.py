@@ -128,12 +128,14 @@ def bfsAgent(world):
                 continue
             else:
                 fringe.append((newState, moves + [v]))
+
+    # uncomment two lines below, the snake will stop if it can not find a path to food
     V = getValidMove(S, r, c)
     return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
 '''
 My heuristic function is the Manhattan Distance between snake head 
 and food. Combined with the cumulative cost, we have the successor
-function.
+choice function.
 '''
 def astarAgent(world):
     r = world.row
@@ -168,8 +170,59 @@ def astarAgent(world):
                 continue
             else:
                 fringe.push((newState, moves + [v], g), f)
+
+    # uncomment two lines below, the snake will stop if it can not find a path to food
     V = getValidMove(S, r, c)
     return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
 
+'''
+Here I am going to implement an Astar with forward checking. The main idea
+of forward checking has been mentioned in LongLive_Agent. The forward checking
+is n-step, it will do a n-step BFS to check whether all successores in n-step 
+are possible dead ends. Here we consider the situation that the snake can not 
+move following its tail as the dead end.
+'''
+def forwardCheck(state, r, c, forwardStep):
+    fringe = []
+    expanded = set()
+    fringe.append((tuple(state), 0)) # stores the node level of the search tree
+    
 
+def astarForwardCheckingAgent(world, forwardStep = 3):
+    r = world.row
+    c = world.col
+    if r > 8 or c > 8:
+        print("The map size should be smaller")
+        return None
+    S = world.curState
+    V = getValidMove(S, r, c)
+    if len(V) == 0:
+        return None
+
+    length = len(S) # goal test is that length of state grows
+    fringe = priorityQueue() # use priority queue for Astar successor function
+    expanded = set()
+
+    fringe.push((tuple(S),[], 0), ManhattanDistance(S[0], S[1])) # start state, additional store the cumulative cost
+    while not fringe.isEmpty():
+        cur, moves, cost = fringe.pop()
+
+        if len(cur) == length + 1: # eaten food, body grew
+            return moves[0]
+        
+        expanded.add(cur)
+        V = getValidMove(cur, r, c)
+        for v in V:
+            newState = tuple(snakeMove(list(cur), r, c, v[0], v[1]))
+            g = cost + 1
+            h = 0 if len(newState) == length+1 else ManhattanDistance(newState[0], newState[1])
+            f = g + h
+            if newState in expanded:
+                continue
+            else:
+                fringe.push((newState, moves + [v], g), f)
+
+    # uncomment two lines below, the snake will stop if it can not find a path to food
+    V = getValidMove(S, r, c)
+    return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
 

@@ -106,3 +106,17 @@ def Forward_Checking_Agent(world):
         else:
             # print("WTF")
             return V[random.randint(0,len(V)-1)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
