@@ -90,3 +90,46 @@ def stillNaiveGreedyAgent(world):
         for v in V:
             directions[v] = distance[v[0]+head[0]][v[1]+head[1]]
         return min(directions, key=directions.get)
+
+'''
+Here I am going to implement a real BFS and Astar agent,which will 
+be really resource-consuming. It will return a sequence of moves 
+leading the snake to eat the food. Without forward checking, both 
+agents will fall into dead end very easily.
+'''
+def bfsAgent(world):
+    r = world.row
+    c = world.col
+    if r > 10 or c > 10:
+        print("The map size should be smaller")
+        return None
+    S = world.curState
+    V = getValidMove(S, r, c)
+    if len(V) == 0:
+        return None
+
+    length = len(S) # goal test is that length of state grows
+    fringe = []
+    expanded = set()
+
+    fringe.append((tuple(S),[])) # start state
+    while not len(fringe) == 0:
+        cur, moves = fringe.pop(0)
+
+        if len(cur) == length + 1: # eaten food, body grew
+            return moves[0]
+        
+        expanded.add(cur)
+        V = getValidMove(cur, r, c)
+        for v in V:
+            newState = tuple(snakeMove(list(cur), r, c, v[0], v[1]))
+            if newState in expanded:
+                continue
+            else:
+                fringe.append((newState, moves + [v]))
+    V = getValidMove(S, r, c)
+    return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
+
+
+
+

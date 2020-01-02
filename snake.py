@@ -11,12 +11,17 @@ def argParse(argv):
         return "Pacman"
     elif '-Snake' in sys.argv:
         return "LongLiveSnake"
+    elif '-random' in sys.argv:
+        return "Random"
     elif '-b' in sys.argv:
         return "Boring"
     elif '-g' in sys.argv:
         return "Greedy"
     elif '-ll' in sys.argv:
         return "LongLive"
+    elif '-bfs' in sys.argv:
+        return "BFS"
+    
     
 
 def visualize(agent, col, row, grid, timeDelay):
@@ -47,7 +52,7 @@ def visualize(agent, col, row, grid, timeDelay):
                 break
         else:
             break
-            # pass # will hold on the termination
+            # pass # It will hold on the termination.
         world.draw(window, width, height)
         pygame.time.delay(timeDelay)
 
@@ -76,6 +81,15 @@ def run(agent, col, row):
     if score == row*col - 1:
         print("Success!")
 
+def randomAgent(world):
+    r = world.row
+    c = world.col
+    S = world.curState
+    V = getValidMove(S, r, c)
+    if len(V) == 0:
+        return None
+    return V[random.randint(0, len(V)-1)]
+
 if __name__ == '__main__':
     row = 10 # default
     col = 10 # default
@@ -89,10 +103,16 @@ if __name__ == '__main__':
         elif sys.argv[i] == '-h':
             row = int(sys.argv[i+1])
             continue
+        elif sys.argv[i] == 'wh':
+            row = int(sys.argv[i+1])
+            col = int(sys.argv[i+1])
+            continue
         elif sys.argv[i] == '-grid':
             grid = int(sys.argv[i+1])
+            continue
         elif sys.argv[i] == '-nv': # not to visualize
             visualization = False
+            continue
     if row < 2 or col < 2:
         print("The map is too small!")
     else:
@@ -100,6 +120,7 @@ if __name__ == '__main__':
             ASIIC_Art.whosBOSS()
         elif argParse(sys.argv) == "LongLiveSnake":
             ASIIC_Art.Long_Live_Snake()
+        
         elif argParse(sys.argv) == "Debug":
             width = col * grid
             height = row * grid
@@ -150,12 +171,20 @@ if __name__ == '__main__':
                 receiveCmd = False
                 pygame.time.delay(25)
 
+        elif argParse(sys.argv) == "Random":
+            if visualization:
+                timeDelay = 10
+                visualize(randomAgent, col, row, grid, timeDelay)
+            else:
+                run(randomAgent, col, row)
+
         elif argParse(sys.argv) == "Boring":
             if visualization:
                 timeDelay = 10
                 visualize(Boring_Agent.boringAgent, col, row, grid, timeDelay)
             else:
                 run(Boring_Agent.boringAgent, col, row)
+
         elif argParse(sys.argv) == "Greedy":
 
             greedyAgent = Search_Agent.veryNaiveGreedyAgent
@@ -173,6 +202,21 @@ if __name__ == '__main__':
                 visualize(LongLive_Agent.longLiveAgent, col, row, grid, timeDelay)
             else:
                 run(LongLive_Agent.longLiveAgent, col, row)
+
+        elif argParse(sys.argv) == "BFS":
+            if visualization:
+                timeDelay = 25
+                visualize(Search_Agent.bfsAgent, col, row, grid, timeDelay)
+            else:
+                run(LongLive_Agent.bfsAgent, col, row)
+
+
+        
+
+
+
+
+
     
 
 
