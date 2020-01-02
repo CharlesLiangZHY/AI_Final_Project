@@ -180,7 +180,9 @@ Here I am going to implement an Astar with forward checking. The main idea
 of forward checking has been mentioned in LongLive_Agent. The forward checking
 is n-step, it will do a n-step BFS to check whether all successores in n-step 
 are possible dead ends. Here we consider the situation that the snake can not 
-move following its tail as the dead end.
+move following its tail as the dead end. If it cannot find a safe path(maybe 
+because of the forward step is too small), the agent will let the snake move
+to a random valid position
 '''
 def calculateDistance(distance, r, c, target, state): # copy from LongLive_Agent.py
     head = state[1] # snake head
@@ -285,6 +287,6 @@ def astarForwardCheckingAgent(world, forwardStep = 2):
                     fringe.push((newState, moves + [v], g), f)
 
     # uncomment two lines below, the snake will stop if it can not find a path to food
-    # V = getValidMove(S, r, c)
-    # return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
+    V = getValidMove(S, r, c)
+    return V[random.randint(0,len(V)-1)] # find no path, return a random valid move
 

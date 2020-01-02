@@ -9,7 +9,7 @@ def run(agent, col, row):
 
     move = 0
     score = 0
-    while True and move < (row*col)**2 and score < 2*row*col // 3: # to avoid endless loops
+    while True and move < (row*col)**2: #to avoid endless loops
         d = agent(world)
         move += 1
         if d != None:
@@ -24,21 +24,25 @@ def run(agent, col, row):
 
 if __name__ == '__main__':
     # agent = Boring_Agent.boringAgent
-    agent = LongLive_Agent.longLiveAgent
-    for r in range(3,11):
+    # agent = LongLive_Agent.longLiveAgent
+    agent = Search_Agent.astarForwardCheckingAgent
 
-        testTime = 100
+    # for r in range(3,11):
+    #     testTime = 100
+    #     total = 0
+    #     for i in range(testTime):
+    #         score, move = run(agent, r, r)
+    #         total += move
+    #     print("Map size is", r, "Average move: ", total // testTime)
 
-        total = 0
-        for i in range(testTime):
-            score, move = run(agent, r, r)
-            total += move
-            
-        print("Map size is", r, "Average move: ", total // testTime)
-
-
-
-
+    r = 6
+    testTime = 50
+    success = 0
+    for i in range(testTime):
+        score, move = run(agent, r, r)
+        if score == r*r - 1:
+            success += 1
+    print("Success rate is", success / testTime)
 
 
 '''
@@ -89,3 +93,7 @@ Map size is 9 Average move:  626
 Map size is 10 Average move:  893
 '''
 
+'''
+AstarForwardChecking Agent with 2-step forward checking 
+Success rate for 6x6 map: 0.86
+'''
