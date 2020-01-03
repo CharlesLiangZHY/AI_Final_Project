@@ -36,7 +36,7 @@ if __name__ == '__main__':
     #     print("Map size is", r, "Average move: ", total // testTime)
 
     r = 6
-    testTime = 50
+    testTime = 100
     success = 0
     for i in range(testTime):
         score, move = run(agent, r, r)
@@ -95,5 +95,5 @@ Map size is 10 Average move:  893
 
 '''
 AstarForwardChecking Agent with 2-step forward checking 
-Success rate for 6x6 map: 0.86
+Success rate for 6x6 map: 0.88
 '''
