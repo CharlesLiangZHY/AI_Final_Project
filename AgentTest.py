@@ -24,8 +24,8 @@ def run(agent, col, row):
 
 if __name__ == '__main__':
     # agent = Boring_Agent.boringAgent
-    # agent = LongLive_Agent.longLiveAgent
-    agent = Search_Agent.astarForwardCheckingAgent
+    agent = LongLive_Agent.longLiveAgent
+    # agent = Search_Agent.astarForwardCheckingAgent
 
     # for r in range(3,11):
     #     testTime = 100
@@ -96,4 +96,9 @@ Map size is 10 Average move:  893
 '''
 AstarForwardChecking Agent with 2-step forward checking 
 Success rate for 6x6 map: 0.88
+'''
+
+'''
+LongLive Agent with 2-step forward checking 
+Success rate for 6x6 map: 0.85
 '''
