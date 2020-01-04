@@ -4,6 +4,8 @@ import Boring_Agent
 import Search_Agent
 import LongLive_Agent
 
+import pandas as pd 
+
 def run(agent, col, row):
     world = Simplified_World(row,col)
 
@@ -22,9 +24,35 @@ def run(agent, col, row):
         score = len(world.curState)-2
     return [score, move]
 
+'''
+Export moves and scores as .CSV format
+'''
+def exportData(agent, col, row, filename):
+    world = Simplified_World(row,col)
+
+    result = []
+    m = 0
+    s = 0
+    while True and m < (row*col)**2: #to avoid endless loops
+        d = agent(world)
+        m += 1
+        if d != None:
+            if world.moveSnake(d[0],d[1]):
+                pass
+            else:
+                break
+        else:
+            break
+        s = len(world.curState)-2
+        result.append([m,s])
+    columns = ["Move", "Score"]
+    data = pd.DataFrame(result, columns=columns)
+    data.to_csv(filename, index=0)
+    
+    return [s, m]
 if __name__ == '__main__':
-    # agent = Boring_Agent.boringAgent
-    agent = LongLive_Agent.longLiveAgent
+    agent = Boring_Agent.boringAgent
+    # agent = LongLive_Agent.longLiveAgent
     # agent = Search_Agent.astarForwardCheckingAgent
 
     # for r in range(3,11):
@@ -35,15 +63,17 @@ if __name__ == '__main__':
     #         total += move
     #     print("Map size is", r, "Average move: ", total // testTime)
 
-    r = 6
-    testTime = 100
-    success = 0
-    for i in range(testTime):
-        score, move = run(agent, r, r)
-        if score == r*r - 1:
-            success += 1
-    print("Success rate is", success / testTime)
+    # r = 6
+    # testTime = 100
+    # success = 0
+    # for i in range(testTime):
+    #     score, move = run(agent, r, r)
+    #     if score == r*r - 1:
+    #         success += 1
+    # print("Success rate is", success / testTime)
 
+    filename = "Export/test" + str(1) + ".csv"
+    exportData(agent, 6, 6, filename)
 
 '''
 Until now, I didn't find any code can beat this.
@@ -99,6 +129,6 @@ Success rate for 6x6 map: 0.88
 '''
 
 '''
-LongLive Agent with 2-step forward checking 
+LongLive Agent
 Success rate for 6x6 map: 0.85
 '''
