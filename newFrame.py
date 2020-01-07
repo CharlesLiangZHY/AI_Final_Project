@@ -13,14 +13,17 @@ class Simplified_World():
     def __init__(self, row=10, col = 10):
         self.row = row
         self.col = col
-        self.curState = [None, (self.col // 2 + 1, self.row // 2 + 1)] 
+        self.curState = [None, (self.col // 2 + 1, self.row // 2 + 1)]
         self.curState[0] = randomPos(self.curState, self.row, self.col)
 
         self.boringAgentInit = 0 # for Boring_Agent
+        self.firstornot = 0
+        self.finishornot = 0
+        self.meanposition = 0#1 for leftup, 2 for rightup, 3 for leftdown, 4 for rightdown
     '''
     curState : [foodPos, headPos, bodyCube1Pos, bodyCube2Pos, ...]
     '''
-    
+
     def moveSnake(self, dirx, diry):
         newState = snakeMove(self.curState, self.row, self.col, dirx, diry)
         if newState == None:
@@ -45,9 +48,9 @@ class Simplified_World():
                 pygame.draw.line(window, (0,0,0), (0,y), (width,y)) # draw vertical lines
             x = 0
             for i in range(self.col):
-                x = x + grid 
+                x = x + grid
                 pygame.draw.line(window, (0,0,0), (x,0), (x,height)) # draw horizontal lines
-            
+
             # draw food
             if self.curState[0] != None:
                 foodX = self.curState[0][0] - 1
@@ -88,7 +91,7 @@ def randomPos(curState, row, col):
         else:
             break
     return (x,y)
-    
+
 def snakeMove(curState, row, col, dirx, diry):
     if (dirx, diry) not in getValidMove(curState, row, col):
         return None
@@ -114,7 +117,7 @@ def getValidMove(curState, row, col):
         down:  dirX =  0 dirY =  1
     '''
     head = curState[1]
-    
+
     for d in directions:
         newHead = (head[0]+d[0], head[1]+d[1])
         # print(d,newHead)

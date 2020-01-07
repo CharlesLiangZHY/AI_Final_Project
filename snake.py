@@ -25,7 +25,9 @@ def argParse(argv):
         return "Astar"
     elif '-fw' in sys.argv:
         return "AstarForwardChecking"
-    
+    elif '-switch' in sys.argv:
+        return "Switch"
+
 
 def visualize(agent, col, row, grid, timeDelay):
     width = col * grid
@@ -45,8 +47,14 @@ def visualize(agent, col, row, grid, timeDelay):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-        
-        d = agent(world)
+
+        score = len(world.curState)-2
+        if score >= 18:
+            pygame.time.delay(500)
+            print(world.meanposition)
+            d = switchtoboring(world)
+        else:
+            d = agent(world)
         move += 1
         if d != None:
             if world.moveSnake(d[0],d[1]):
@@ -60,7 +68,7 @@ def visualize(agent, col, row, grid, timeDelay):
         pygame.time.delay(timeDelay)
 
     score = len(world.curState)-2
-    print("The map size is", row, "x", col, "; Score is", score, "; Used", move-1, "moves.")  
+    print("The map size is", row, "x", col, "; Score is", score, "; Used", move-1, "moves.")
     if score == row*col - 1:
         print("Success!")
 
@@ -78,9 +86,9 @@ def run(agent, col, row):
                 break
         else:
             break
-    
+
     score = len(world.curState)-2
-    print("The map size is", row, "x", col, "; Score is", score, "; Used", move-1, "moves.")  
+    print("The map size is", row, "x", col, "; Score is", score, "; Used", move-1, "moves.")
     if score == row*col - 1:
         print("Success!")
 
@@ -93,11 +101,124 @@ def randomAgent(world):
         return None
     return V[random.randint(0, len(V)-1)]
 
+def switchtoboring(world):
+    r = world.row
+    c = world.col
+    S = world.curState
+    V = getValidMove(S, r, c)
+    if len(V) == 0:
+        return None
+    X = 0
+    Y = 0
+    if world.firstornot == 0:
+        world.firstornot = 1
+        for i in range(1,len(S)):
+            x = S[i][0]
+            y = S[i][1]
+            if x <= c/2:
+                X = X - 1
+            else:
+                X = X + 1
+            if y <= r/2:
+                Y = Y - 1
+            else:
+                Y = Y + 1
+        if X >= 0:
+            if y >= 0:
+                world.meanposition = 4
+                if (0,-1) in V:
+                    return (0,-1) # up
+                elif (-1,0) in V:
+                    return (-1,0) # left
+                elif (0,1) in V:
+                    return (0,1) # down
+                elif (1,0) in V:
+                    return (1,0) # right
+            elif Y < 0:
+                world.meanposition = 2
+                if (0,1) in V:
+                    return (0,1) # down
+                elif (-1,0) in V:
+                    return (-1,0) # left
+                elif (0,-1) in V:
+                    return (0,-1) # up
+                elif (1,0) in V:
+                    return (1,0) # right
+        elif X < 0:
+            if Y >= 0:
+                world.meanposition = 3
+                if (0,-1) in V:
+                    return (0,-1) # up
+                elif (1,0) in V:
+                    return (1,0) # right
+                elif (0,1) in V:
+                    return (0,1) # down
+                elif (-1,0) in V:
+                    return (-1,0) # left
+            elif Y < 0:
+                world.meanposition = 1
+                if (0,1) in V:
+                    return (0,1) # down
+                elif (1,0) in V:
+                    return (1,0) # right
+                elif (0,-1) in V:
+                    return (0,-1) # up
+                elif (-1,0) in V:
+                    return (-1,0) # left
+    else:
+        if world.meanposition == 1:
+            # if S[1] == (c,r):
+            #     if S[2] == (c-1,r):
+            #         if (0,-1) in V:
+            #             return (0,-1) # up
+            #     elif S[2] == (c,r-1):
+            #         if (-1,0) in V:
+            #             return (-1,0) # left
+            if (0,1) in V:
+                return (0,1) # down
+            elif (1,0) in V:
+                return (1,0) # right
+            elif (0,-1) in V:
+                return (0,-1) # up
+            elif (-1,0) in V:
+                return (-1,0) # left
+        elif world.meanposition == 2:
+            if (0,1) in V:
+                return (0,1) # down
+            elif (-1,0) in V:
+                return (-1,0) # left
+            elif (0,-1) in V:
+                return (0,-1) # up
+            elif (1,0) in V:
+                return (1,0) # right
+        elif world.meanposition == 3:
+            if (0,-1) in V:
+                return (0,-1) # up
+            elif (1,0) in V:
+                return (1,0) # right
+            elif (0,1) in V:
+                return (0,1) # down
+            elif (-1,0) in V:
+                return (-1,0) # left
+        elif world.meanposition == 4:
+            if (0,-1) in V:
+                return (0,-1) # up
+            elif (-1,0) in V:
+                return (-1,0) # left
+            elif (0,1) in V:
+                return (0,1) # down
+            elif (1,0) in V:
+                return (1,0) # right
+
+
+
+
 if __name__ == '__main__':
     row = 8 # default
     col = 8 # default
     grid = 40 # default
     visualization = True
+    switchlevel = 0
     # parsing arguments
     for i in range(len(sys.argv)):
         if sys.argv[i] == '-w':
@@ -116,6 +237,9 @@ if __name__ == '__main__':
         elif sys.argv[i] == '-nv': # not to visualize
             visualization = False
             continue
+        elif sys.argv[i] == 'switchlevel':
+            switchlevel = int(sys.argv[i+1])
+            continue
     if row < 2 or col < 2:
         print("The map is too small!")
     else:
@@ -123,7 +247,7 @@ if __name__ == '__main__':
             ASIIC_Art.whosBOSS()
         elif argParse(sys.argv) == "LongLiveSnake":
             ASIIC_Art.Long_Live_Snake()
-        
+
         elif argParse(sys.argv) == "Debug":
             width = col * grid
             height = row * grid
@@ -146,7 +270,7 @@ if __name__ == '__main__':
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
-                    
+
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
                         dirx = -1
                         diry = 0
@@ -169,7 +293,7 @@ if __name__ == '__main__':
                         pass
                     else:
                         break
-                
+
                 world.draw(window, width, height)
                 receiveCmd = False
                 pygame.time.delay(25)
@@ -219,7 +343,7 @@ if __name__ == '__main__':
                 visualize(Search_Agent.astarAgent, col, row, grid, timeDelay)
             else:
                 run(Search_Agent.astarAgent, col, row)
-        
+
         elif argParse(sys.argv) == "AstarForwardChecking":
             if visualization:
                 timeDelay = 25
@@ -227,27 +351,9 @@ if __name__ == '__main__':
             else:
                 run(Search_Agent.astarForwardCheckingAgent, col, row)
 
-
-        
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        elif argParse(sys.argv) == "Switch":
+            if visualization:
+                timeDelay = 25
+                visualize(Search_Agent.astarForwardCheckingAgent, col, row, grid, timeDelay)
+            else:
+                run(Search_Agent.astarForwardCheckingAgent, col, row)
