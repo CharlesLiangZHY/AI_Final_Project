@@ -49,10 +49,14 @@ def visualize(agent, col, row, grid, timeDelay):
                 pygame.quit()
 
         score = len(world.curState)-2
-        if score >= 18:
-            pygame.time.delay(500)
-            print(world.meanposition)
-            d = switchtoboring(world)
+        if score >= 15:
+            if world.finishornot != 1:
+                pygame.time.delay(800)
+                print(world.meanposition)
+                d = switchtoboring(world)
+            else:
+                d = Boring_Agent.boringAgent(world)
+
         else:
             d = agent(world)
         move += 1
@@ -110,6 +114,8 @@ def switchtoboring(world):
         return None
     X = 0
     Y = 0
+    # if world.finishornot == 1:
+    #     if world
     if world.firstornot == 0:
         world.firstornot = 1
         for i in range(1,len(S)):
@@ -136,10 +142,10 @@ def switchtoboring(world):
                     return (1,0) # right
             elif Y < 0:
                 world.meanposition = 2
-                if (0,1) in V:
-                    return (0,1) # down
-                elif (-1,0) in V:
+                if (-1,0) in V:
                     return (-1,0) # left
+                elif (0,1) in V:
+                    return (0,1) # down
                 elif (0,-1) in V:
                     return (0,-1) # up
                 elif (1,0) in V:
@@ -147,10 +153,10 @@ def switchtoboring(world):
         elif X < 0:
             if Y >= 0:
                 world.meanposition = 3
-                if (0,-1) in V:
-                    return (0,-1) # up
-                elif (1,0) in V:
+                if (1,0) in V:
                     return (1,0) # right
+                elif (0,-1) in V:
+                    return (0,-1) # up
                 elif (0,1) in V:
                     return (0,1) # down
                 elif (-1,0) in V:
@@ -167,13 +173,14 @@ def switchtoboring(world):
                     return (-1,0) # left
     else:
         if world.meanposition == 1:
-            # if S[1] == (c,r):
-            #     if S[2] == (c-1,r):
-            #         if (0,-1) in V:
-            #             return (0,-1) # up
-            #     elif S[2] == (c,r-1):
-            #         if (-1,0) in V:
-            #             return (-1,0) # left
+            if S[1] == (c,r):
+                world.finishornot = 1
+                if S[2] == (c-1,r):
+                    if (0,-1) in V:
+                        return (0,-1) # up
+                elif S[2] == (c,r-1):
+                    if (-1,0) in V:
+                        return (-1,0) # left
             if (0,1) in V:
                 return (0,1) # down
             elif (1,0) in V:
@@ -183,24 +190,48 @@ def switchtoboring(world):
             elif (-1,0) in V:
                 return (-1,0) # left
         elif world.meanposition == 2:
-            if (0,1) in V:
-                return (0,1) # down
-            elif (-1,0) in V:
+            if S[1] == (1,r):
+                world.finishornot = 1
+                if S[2] == (1,r-1):
+                    if (1,0) in V:
+                        return (1,0) # right
+                elif S[2] == (2,r):
+                    if (0,-1) in V:
+                        return (0,-1) #up
+            if (-1,0) in V:
                 return (-1,0) # left
+            elif (0,1) in V:
+                return (0,1) # down
             elif (0,-1) in V:
                 return (0,-1) # up
             elif (1,0) in V:
                 return (1,0) # right
         elif world.meanposition == 3:
-            if (0,-1) in V:
-                return (0,-1) # up
-            elif (1,0) in V:
+            if S[1] == (c,1):
+                world.finishornot = 1
+                if S[2] == (c-1,1):
+                    if (0,1) in V:
+                        return (0,1) # down
+                elif S[2] == (c,2):
+                    if (-1,0) in V:
+                        return (-1,0) # left
+            if (1,0) in V:
                 return (1,0) # right
+            elif (0,-1) in V:
+                return (0,-1) # up
             elif (0,1) in V:
                 return (0,1) # down
             elif (-1,0) in V:
                 return (-1,0) # left
         elif world.meanposition == 4:
+            if S[1] == (1,1):
+                world.finishornot = 1
+                if S[2] == (1,2):
+                    if (1,0) in V:
+                        return (1,0) # right
+                elif S[2] == (2,1):
+                    if (0,1) in V:
+                        return (0,1) # down
             if (0,-1) in V:
                 return (0,-1) # up
             elif (-1,0) in V:
@@ -353,7 +384,7 @@ if __name__ == '__main__':
 
         elif argParse(sys.argv) == "Switch":
             if visualization:
-                timeDelay = 25
+                timeDelay = 50
                 visualize(Search_Agent.astarForwardCheckingAgent, col, row, grid, timeDelay)
             else:
                 run(Search_Agent.astarForwardCheckingAgent, col, row)
