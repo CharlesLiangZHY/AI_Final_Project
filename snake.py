@@ -32,7 +32,8 @@ def argParse(argv):
         return "NewQLearningTrain"
     elif '-qlt' in sys.argv:
         return "QLearningTrain"
-    
+    elif '-ql' in sys.argv:
+        return "QLearning"
 
 def visualize(agent, col, row, grid, timeDelay, ql=None):
     width = col * grid
@@ -299,7 +300,18 @@ if __name__ == '__main__':
             else:
                 for i in range(trainTime):
                     QL_Agent.naive_train(QL, (row, col), learningRate, discounting)
-
+        
+        elif argParse(sys.argv) == "QLearning":
+            if filename == None:
+                print("Filename empty.")
+            else:
+                with open(filename+".pkl", 'rb') as file:
+                    QL = pickle.loads(file.read())
+                if visualization:
+                    timeDelay = 25
+                    visualize(QL_Agent.qlAgent, col, row, grid, timeDelay, QL)
+                else:
+                    run(QL_Agent.qlAgent, col, row, QL)
 
 
 

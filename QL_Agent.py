@@ -250,12 +250,18 @@ def naive_train_V(qLearning, mapsize, learningRate, discounting, window, width, 
 
 
 def qlAgent(world, ql):
+    r = world.row
+    c = world.col
+    state = world.curState
+    RLState = transform_to_NaiveRLstate(state, r, c)
+
     QValueTable = ql.QValueTable
     actions = ql.actionList
 
+
     action_Q = {}
     for action in actions:
-        action_Q[action] = qLearning.QValueTable[(oldRLState, action)]
+        action_Q[action] = QValueTable[(RLState, action)]
     a = max(action_Q, key=action_Q.get)
     return a
 
