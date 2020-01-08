@@ -116,7 +116,7 @@ def transform_to_NaiveRLstate(state, r, c):
 
 # Reward according to full world state
 def naive_reward(oldState, newState):
-    eatFoodReward = 500 
+    eatFoodReward = 5000 
     deathReward = -500
     getCloserReward = 100
     getFurtherReward = -50
@@ -204,6 +204,9 @@ def naive_train_V(qLearning, mapsize, learningRate, discounting, window, width, 
     qLearning.actionList = actions
 
     world.draw(window, width, height) # visualization
+
+
+    
 
     t = 0 # to avoid endless loop
     while True and t < 5000:

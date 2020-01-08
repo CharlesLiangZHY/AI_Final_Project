@@ -45,6 +45,8 @@ def visualize(agent, col, row, grid, timeDelay, ql=None):
     world = Simplified_World(row,col)
     world.draw(window, width, height)
 
+    pygame.time.delay(10000) # for record screen
+
     move = 0
     while True:
         pygame.time.delay(5)
@@ -67,8 +69,8 @@ def visualize(agent, col, row, grid, timeDelay, ql=None):
             else:
                 break
         else:
-            break
-            # pass # It will hold on the termination.
+            # break
+            pass # It will hold on the termination.
         world.draw(window, width, height)
         pygame.time.delay(timeDelay)
 
