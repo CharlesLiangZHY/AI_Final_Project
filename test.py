@@ -1,17 +1,7 @@
 from QL_Agent import *
 
-filename = "test.pkl"
+filename = "NewTrain"
 
-a = QLearning(filename)
-a.QValueTable = generate_QValueTable_of_NaiveRLstate()
+# with open(filename+".pkl", 'rb') as file:
+#     QL = pickle.loads(file.read())
 
-
-a.save()
-
-
-
-
-with open(filename, 'rb') as file:
-    T = pickle.loads(file.read())
-
-print(T.QValueTable)

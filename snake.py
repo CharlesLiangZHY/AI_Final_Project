@@ -3,6 +3,9 @@ import ASIIC_Art
 import Boring_Agent
 import Search_Agent
 import LongLive_Agent
+import QL_Agent 
+
+import pickle
 
 def argParse(argv):
     if '-s' in argv:
@@ -25,6 +28,10 @@ def argParse(argv):
         return "Astar"
     elif '-fw' in sys.argv:
         return "AstarForwardChecking"
+    elif '-newqlt' in sys.argv:
+        return "NewQLearningTrain"
+    elif '-qlt' in sys.argv:
+        return "QLearningTrain"
     
 
 def visualize(agent, col, row, grid, timeDelay):
@@ -98,6 +105,10 @@ if __name__ == '__main__':
     col = 8 # default
     grid = 40 # default
     visualization = True
+    filename = None
+    trainTime = 0
+    learningRate = 0.9
+    discounting = 0.8
     # parsing arguments
     for i in range(len(sys.argv)):
         if sys.argv[i] == '-w':
@@ -116,6 +127,19 @@ if __name__ == '__main__':
         elif sys.argv[i] == '-nv': # not to visualize
             visualization = False
             continue
+        elif sys.argv[i] == '-filename':
+            filename = sys.argv[i+1]
+            continue
+        elif sys.argv[i] == '-time':
+            trainTime = int(sys.argv[i+1])
+            continue
+        elif sys.argv[i] == '-alpha':
+            learningRate = float(sys.argv[i+1])
+            continue
+        elif sys.argv[i] == '-gamma':
+            discounting = float(sys.argv[i+1])
+            continue
+
     if row < 2 or col < 2:
         print("The map is too small!")
     else:
@@ -227,8 +251,46 @@ if __name__ == '__main__':
             else:
                 run(Search_Agent.astarForwardCheckingAgent, col, row)
 
+        elif argParse(sys.argv) == "NewQLearningTrain":
+            QL = None
+            if filename == None:
+                filename = "NewTrain"
+                QL = QL_Agent.QLearning(filename, QL_Agent.generate_QValueTable_of_NaiveRLstate())
+            else:
+                QL = QL_Agent.QLearning(filename, QL_Agent.generate_QValueTable_of_NaiveRLstate())
+            if visualization:
+                width = col * grid
+                height = row * grid
+                pygame.init()
+                window = pygame.display.set_mode((width,height))
+                clock = pygame.time.Clock()
+                for i in range(trainTime):
+                    QL_Agent.naive_train_V(QL, (row, col), learningRate, discounting, window, width, height, 50, clock)
 
-        
+            else:
+                for i in range(trainTime):
+                    QL_Agent.naive_train(QL, (row, col), learningRate, discounting)
+
+        elif argParse(sys.argv) == "QLearningTrain":
+            QL = None
+            if filename == None:
+                print("Filename empty.")
+            else:
+                with open(filename+".pkl", 'rb') as file:
+                    QL = pickle.loads(file.read())
+            if visualization:
+                width = col * grid
+                height = row * grid
+                pygame.init()
+                window = pygame.display.set_mode((width,height))
+                clock = pygame.time.Clock()
+                for i in range(trainTime):
+                    QL_Agent.naive_train_V(QL, (row, col), learningRate, discounting, window, width, height, 50, clock)
+
+            else:
+                for i in range(trainTime):
+                    QL_Agent.naive_train(QL, (row, col), learningRate, discounting)
+
 
 
 
