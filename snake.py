@@ -288,18 +288,18 @@ if __name__ == '__main__':
             else:
                 with open(filename+".pkl", 'rb') as file:
                     QL = pickle.loads(file.read())
-            if visualization:
-                width = col * grid
-                height = row * grid
-                pygame.init()
-                window = pygame.display.set_mode((width,height))
-                clock = pygame.time.Clock()
-                for i in range(trainTime):
-                    QL_Agent.naive_train_V(QL, (row, col), learningRate, discounting, window, width, height, 50, clock)
+                if visualization:
+                    width = col * grid
+                    height = row * grid
+                    pygame.init()
+                    window = pygame.display.set_mode((width,height))
+                    clock = pygame.time.Clock()
+                    for i in range(trainTime):
+                        QL_Agent.naive_train_V(QL, (row, col), learningRate, discounting, window, width, height, 50, clock)
 
-            else:
-                for i in range(trainTime):
-                    QL_Agent.naive_train(QL, (row, col), learningRate, discounting)
+                else:
+                    for i in range(trainTime):
+                        QL_Agent.naive_train(QL, (row, col), learningRate, discounting)
         
         elif argParse(sys.argv) == "QLearning":
             if filename == None:
