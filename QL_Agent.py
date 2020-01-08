@@ -56,6 +56,9 @@ rewardFunction format : function(old world state, new world state)
 '''
 # Transfer full world state to Naive_RL_state
 def transform_to_NaiveRLstate(state, r, c):
+    if state == None:
+        return None
+
     RL_state = [None, None, None, None, None]
 
     food = state[0]
@@ -140,7 +143,10 @@ def tossCoin(p):
 
 
 def QValueUpdate(QValueTable, actions, R, QState, newRLState, learningRate, discounting):
-    sample = R + discounting * max(map(lambda a: QValueTable[(newRLState, a)], actions)) # 帅
+    if newRLState == None: # terminal state
+        sample = R
+    else:
+        sample = R + discounting * max(map(lambda a: QValueTable[(newRLState, a)], actions)) # 帅
     QValueTable[QState] = (1 - learningRate) * QValueTable[QState] + learningRate * sample
 
 def naive_train(qLearning, mapsize, learningRate, discounting):
@@ -157,14 +163,21 @@ def naive_train(qLearning, mapsize, learningRate, discounting):
         if forcing_exploration == 1:
             a = actions[random.randint(0, len(actions)-1)]
         else:
-            pass
+            action_Q = {}
+            for action in actions:
+                action_Q[action] = QValueTable[(oldRLState, action)]
+            a = max(action_Q, key=action_Q.get)
         
-        newState = world.moveSnake(a[0], a[1])
+        newState = snakeMove(a[0], a[1])
         newRLState = transform_to_NaiveRLstate(newState, r, c)
         R = naive_reward(oldState, newState)
         QState = (oldRLState, a)
         QValueUpdate(qLearning.QValueTable, actions, R, QState, newRLState, learningRate, discounting)
-        
+
+        if world.moveSnake(a[0], a[1]):
+            pass
+        else:
+            break
 
     qLearning.Episode += 1
     if qLearning.Epsilon > 0:
