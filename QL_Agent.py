@@ -156,8 +156,9 @@ def naive_train(qLearning, mapsize, learningRate, discounting):
     oldRLState = transform_to_NaiveRLstate(oldState, r, c)
 
     e = qLearning.Epsilon
-    actions = [(-1,0), (1,0), (0,-1), (0,1)]
-    
+    actions = [(-1,0), (1,0), (0,-1), (0,1)] # left right up down
+    qLearning.actionList = actions
+
     while True:
         forcing_exploration = tossCoin(e) # 1 act randomly and 0 act according to QValue 
         if forcing_exploration == 1:
@@ -165,10 +166,10 @@ def naive_train(qLearning, mapsize, learningRate, discounting):
         else:
             action_Q = {}
             for action in actions:
-                action_Q[action] = QValueTable[(oldRLState, action)]
+                action_Q[action] = qLearning.QValueTable[(oldRLState, action)]
             a = max(action_Q, key=action_Q.get)
         
-        newState = snakeMove(a[0], a[1])
+        newState = snakeMove(oldState, r, c, a[0], a[1])
         newRLState = transform_to_NaiveRLstate(newState, r, c)
         R = naive_reward(oldState, newState)
         QState = (oldRLState, a)
@@ -179,13 +180,25 @@ def naive_train(qLearning, mapsize, learningRate, discounting):
         else:
             break
 
+        oldState = newState
+        oldRLState = newRLState
+
     qLearning.Episode += 1
     if qLearning.Epsilon > 0:
         qLearning.Epsilon -= 0.01 # lower epsilon over time
     qLearning.save()
 
 
+def qlAgent(world, ql):
+    QValueTable = ql.QValueTable
+    actions = ql.actionList
 
+    action_Q = {}
+    for action in actions:
+        action_Q[action] = qLearning.QValueTable[(oldRLState, action)]
+    a = max(action_Q, key=action_Q.get)
+    return a
+    
 
 
 
