@@ -34,7 +34,7 @@ def argParse(argv):
         return "QLearningTrain"
     
 
-def visualize(agent, col, row, grid, timeDelay):
+def visualize(agent, col, row, grid, timeDelay, ql=None):
     width = col * grid
     height = row * grid
     pygame.init()
@@ -52,8 +52,13 @@ def visualize(agent, col, row, grid, timeDelay):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-        
-        d = agent(world)
+
+        d = None
+        if ql == None:
+            d = agent(world)
+        else:
+            d = agent(world, ql)
+
         move += 1
         if d != None:
             if world.moveSnake(d[0],d[1]):
@@ -71,12 +76,16 @@ def visualize(agent, col, row, grid, timeDelay):
     if score == row*col - 1:
         print("Success!")
 
-def run(agent, col, row):
+def run(agent, col, row, ql=None):
     world = Simplified_World(row,col)
 
     move = 0
     while True and move < (row*col)**2: # to avoid endless loops
-        d = agent(world)
+        d = None
+        if ql == None:
+            d = agent(world)
+        else:
+            d = agent(world, ql)
         move += 1
         if d != None:
             if world.moveSnake(d[0],d[1]):

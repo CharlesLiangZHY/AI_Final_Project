@@ -22,7 +22,7 @@ class QLearning():
     # T = pickle.loads(file.read())
 '''
 I think it is difficult to train on the full world state, since
-the state size is too large. I simplify the state.
+the state size is too large. I simplify the state(approximate Q-learning).
 
 Naive RL state : 
 [obstacle left, obstacle right, obstacle up, obstacle down, Direction of food to head]
@@ -116,10 +116,10 @@ def transform_to_NaiveRLstate(state, r, c):
 
 # Reward according to full world state
 def naive_reward(oldState, newState):
-    eatFoodReward = 20
+    eatFoodReward = 100
     deathReward = -500
-    getCloserReward = 10
-    getFurtherReward = -5
+    getCloserReward = 0
+    getFurtherReward = 0
     if newState == None:
         return deathReward
 
@@ -159,7 +159,8 @@ def naive_train(qLearning, mapsize, learningRate, discounting):
     actions = [(-1,0), (1,0), (0,-1), (0,1)] # left right up down
     qLearning.actionList = actions
 
-    while True:
+    t = 0 # to avoid endless loop
+    while True and t < 5000:
         forcing_exploration = tossCoin(e) # 1 act randomly and 0 act according to QValue 
         if forcing_exploration == 1:
             a = actions[random.randint(0, len(actions)-1)]
@@ -183,6 +184,10 @@ def naive_train(qLearning, mapsize, learningRate, discounting):
         oldState = newState
         oldRLState = newRLState
 
+        if oldRLState == None:
+            break
+        
+        t+=1 # to avoid endless loop
     qLearning.Episode += 1
     if qLearning.Epsilon > 0:
         qLearning.Epsilon -= 0.01 # lower epsilon over time
@@ -200,7 +205,8 @@ def naive_train_V(qLearning, mapsize, learningRate, discounting, window, width, 
 
     world.draw(window, width, height) # visualization
 
-    while True:
+    t = 0 # to avoid endless loop
+    while True and t < 5000:
         pygame.time.delay(5)
         clock.tick(50) # frame
         # event listening (Essential!)
@@ -235,6 +241,7 @@ def naive_train_V(qLearning, mapsize, learningRate, discounting, window, width, 
 
         if oldRLState == None:
             break
+        t += 1 # to avoid endless loop
 
     qLearning.Episode += 1
     if qLearning.Epsilon > 0:
