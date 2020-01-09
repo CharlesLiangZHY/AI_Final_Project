@@ -3,16 +3,22 @@ from newFrame import *
 import Boring_Agent
 import Search_Agent
 import LongLive_Agent
+import QL_Agent 
 
 import pandas as pd 
+import pickle
 
-def run(agent, col, row):
+def run(agent, col, row, ql=None):
     world = Simplified_World(row,col)
 
     move = 0
     score = 0
     while True and move < (row*col)**2: #to avoid endless loops
-        d = agent(world)
+        d = None
+        if ql == None:
+            d = agent(world)
+        else:
+            d = agent(world, ql)
         move += 1
         if d != None:
             if world.moveSnake(d[0],d[1]):
@@ -27,14 +33,17 @@ def run(agent, col, row):
 '''
 Export moves and scores as .CSV format
 '''
-def exportData(agent, col, row, filename):
+def exportData(agent, col, row, filename, ql=None):
     world = Simplified_World(row,col)
 
     result = []
     m = 0
     s = 0
     while True and m < (row*col)**2: #to avoid endless loops
-        d = agent(world)
+        if ql == None:
+            d = agent(world)
+        else:
+            d = agent(world, ql)
         m += 1
         if d != None:
             if world.moveSnake(d[0],d[1]):
@@ -51,9 +60,13 @@ def exportData(agent, col, row, filename):
     
     return [s, m]
 if __name__ == '__main__':
-    agent = Boring_Agent.boringAgent
+    # agent = Boring_Agent.boringAgent
+    # agent = Search_Agent.veryNaiveGreedyAgent
+    # agent = Search_Agent.bfsAgent
+    # agent = Search_Agent.astarAgent
     # agent = LongLive_Agent.longLiveAgent
     # agent = Search_Agent.astarForwardCheckingAgent
+    agent = QL_Agent.qlAgent
 
     # for r in range(3,11):
     #     testTime = 100
@@ -72,8 +85,73 @@ if __name__ == '__main__':
     #         success += 1
     # print("Success rate is", success / testTime)
 
-    filename = "Export/test" + str(1) + ".csv"
-    exportData(agent, 6, 6, filename)
+    # for i in range(10):
+    #     filename = "Export/Boring_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+
+    # for i in range(10,20):
+    #     filename = "Export/Boring_test" + str(i+1) + ".csv"
+    #     exportData(agent, 20, 20, filename)
+
+    # for i in range(20,30):
+    #     filename = "Export/Boring_test" + str(i+1) + ".csv"
+    #     exportData(agent, 10, 10, filename)
+
+    # for i in range(10):
+    #     filename = "Export/Greedy_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+
+    # for i in range(10,20):
+    #     filename = "Export/Greedy_test" + str(i+1) + ".csv"
+    #     exportData(agent, 20, 20, filename)
+
+    # for i in range(20,30):
+    #     filename = "Export/Greedy_test" + str(i+1) + ".csv"
+    #     exportData(agent, 40, 40, filename)
+
+    # for i in range(10):
+    #     filename = "Export/BFS_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+
+    # for i in range(10,50):
+    #     filename = "Export/BFS_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+    
+    # for i in range(10):
+    #     filename = "Export/Astar_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+    
+    # for i in range(10,50):
+    #     filename = "Export/Astar_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+
+    # for i in range(10):
+    #     filename = "Export/AstarWithForwardChecking_test" + str(i+1) + ".csv"
+    #     exportData(agent, 6, 6, filename)
+
+
+    # for i in range(10):
+    #     filename = "Export/LongLive_test" + str(i+1) + ".csv"
+    #     exportData(agent, 10, 10, filename)
+
+
+
+
+
+    for i in range(10):
+        filename = "Export/QL_test" + str(i+1) + ".csv"
+
+        with open("Trained/T2.pkl", 'rb') as file:
+            QL = pickle.loads(file.read())
+        exportData(agent, 40, 40, filename, QL)
+
+
+
+
+
+
+
+
 
 '''
 Until now, I didn't find any code can beat this.

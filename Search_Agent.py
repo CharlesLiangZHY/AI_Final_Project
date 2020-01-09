@@ -101,7 +101,7 @@ to eat the food, I still let it return the next move.
 def bfsAgent(world):
     r = world.row
     c = world.col
-    if r > 8 or c > 8:
+    if r > 6 or c > 6:
         print("The map size should be smaller.")
         return None
     S = world.curState
@@ -140,7 +140,7 @@ choice function.
 def astarAgent(world):
     r = world.row
     c = world.col
-    if r > 8 or c > 8:
+    if r > 6 or c > 6:
         print("The map size should be smaller.")
         return None
     S = world.curState
