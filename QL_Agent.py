@@ -116,7 +116,7 @@ def transform_to_NaiveRLstate(state, r, c):
 
 # Reward according to full world state
 def naive_reward(oldState, newState):
-    eatFoodReward = 5000 
+    eatFoodReward = 500 
     deathReward = -500
     getCloserReward = 100
     getFurtherReward = -50

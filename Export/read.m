@@ -25,7 +25,7 @@
 %     axis([0 50000 0 400])
 %     hold on
 % end
-
+% 
 % name = 'Greedy_test';
 % for i=1:10
 %     filename = [name num2str(i) '.csv'];
@@ -91,7 +91,7 @@
 %     data = importdata(filename);
 %     move = data.data(:,1);
 %     score = data.data(:,2);
-%     plot(move,score, '-.r');
+%     plot(move,score, '-.c');
 %     xlabel('Move')
 % 	ylabel('Score')
 % 	title('Astar with forward checking Agent')
@@ -112,7 +112,7 @@
 %     axis([0 10000 0 100])
 %     hold on
 % end
-
+% 
 % name = 'Boring_test';
 % for i=21:30
 %     filename = [name num2str(i) '.csv'];
@@ -122,7 +122,7 @@
 %     plot(move,score, '-.k');
 %     xlabel('Move')
 % 	ylabel('Score')
-% 	title('Boring Agent')
+% 	title('Comparison')
 %     axis([0 10000 0 100])
 %     hold on
 % end
@@ -162,10 +162,10 @@ for i=1:10
     data = importdata(filename);
     move = data.data(:,1);
     score = data.data(:,2);
-    plot(move,score, '-.b');
+    plot(move,score, '-.r');
     xlabel('Move')
 	ylabel('Score')
-	title('QL Agent 40x40 Map')
+	title('Comparison')
     axis([0 2000 0 100])
     hold on
 end
